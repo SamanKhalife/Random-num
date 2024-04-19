@@ -1,0 +1,24 @@
+stages:          # List of stages for jobs, and their order of execution
+  - update
+  - build
+  - test
+  - deploy
+
+build-job:       # This job runs in the build stage, which runs first.
+  stage: update
+  script:
+    - echo "sudo apt update && sudo apt upgrade -y"
+    - echo "Compile complete."
+
+unit-test-job:   # This job runs in the test stage.
+  stage: build    # It only starts when the job in the build stage completes successfully.
+  script:
+    - echo "docker build -t random-num:latest . "
+    - sleep 10
+
+lint-test-job:   # This job also runs in the test stage.
+  stage: test    # It can run at the same time as unit-test-job (in parallel).
+  script:
+    - echo "dokcer images"
+    - sleep 3
+
