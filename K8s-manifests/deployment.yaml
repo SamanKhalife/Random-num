@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: random-cluster
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: random-num
+  template:
+    metadata:
+      labels:
+        app: my-app
+    spec:
+      containers:
+        - name: random-num-container
+    image: random-num:latest
+    ports:
+      - containerPort: 8569
