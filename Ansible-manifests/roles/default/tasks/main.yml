@@ -1,0 +1,52 @@
+---
+
+# - name: install git
+#   apt:
+#     name: git
+#     state: present
+#     update_cache: yes
+
+# - name: install sysstat
+#   apt:
+#     name: sysstat
+#     state: present
+#     update_cache: yes
+
+
+
+# here we use ansible loops
+
+- name: Install packages
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  Loop:
+    - git
+    - sysstat
+    - tcpdump
+    - htop
+    - iotop
+    - atop
+    # add any other package names you want to install here.
+
+
+
+
+- name: install packages with shell
+  shell: |
+    apt update && apt install htop
+
+# it chck return code of the command, by  default Ansible is not checking if a command was successful or not.
+# by 'echo $?'
+
+- name: create a file 
+  file:
+    state: directory
+    path: "/tmp/testdir"
+
+
+
+
+
+
