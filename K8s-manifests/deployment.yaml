@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: random-cluster
+  labels:
+    app: randonm-num
 spec:
   replicas: 3
   selector:
@@ -10,10 +12,13 @@ spec:
   template:
     metadata:
       labels:
-        app: my-app
+        app: randonm-num
     spec:
       containers:
-        - name: random-num-container
-    image: random-num:latest
+        - name: random-num
+    image: samankhalife/random-num:latest
+    imagePullPolicy: Always
     ports:
       - containerPort: 8569
+
+# kubectl apply -f java-app/deployment

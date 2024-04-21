@@ -25,3 +25,30 @@ mariadb
 |              |              |              |              |              |              |              | 3000         |              |              |              |
 |              |              |              |              |              |              |              |              |              |              |              |
 |              |              |              |              |              |              |              |              |              |              |              |
+
+
+## what ansible will do for us ???  
+
+ansible tasks:
+```
+updating system
+unabling swap
+installing prometheus
+installing grafana
+configuring grafana
+instaliing docker
+installing helm
+installing kubernetes and dependencies
+deploying EFK
+deploying elasticsearch
+deploying kibana
+deploying rabbitmq
+deploying postgres
+installing haproxy.ingress
+
+```
+
+
+
+
+

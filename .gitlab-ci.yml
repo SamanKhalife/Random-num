@@ -2,49 +2,42 @@ stages:
   - update
   - build
   - test
-  - lint-test-job
-  - push
-  - new_release
-  - deploy
+  - push_image
 
-before_script:
-  - docker login -u saman.kh382@gmail.com -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-  
-build-job:
+# variables set in your GitLab project's settings
+variables:
+  DOCKER_HUB_USERNAME: $DOCKER_HUB_USERNAME  
+  DOCKER_HUB_PASSWORD: $DOCKER_HUB_PASSWORD
+  IMAGE_NAME: random-num
+  TAG: latest 
+
+update-job:
   stage: update
   script:
     - echo "sudo apt update && sudo apt upgrade -y"
-    - echo "Compile complete."
+    - echo "Update complete."
 
-unit-test-job:   # This job runs in the test stage.
-  stage: build    # It only starts when the job in the build stage completes successfully.
+build:
+  stage: build
+  image: docker:stable
+  services:
+    - docker:dind
   script:
-    - echo "docker build -t random-num:latest . "
-    - sleep 10
+    - docker build -t $DOCKER_HUB_USERNAME/$IMAGE_NAME:$TAG .
+    - docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD
+    - docker push $DOCKER_HUB_USERNAME/$IMAGE_NAME:$TAG
 
-test:
+lint-test-job:
   stage: test
   script:
-    - docker-compose run simple_app python manage.py test
-    
-lint-test-job:   # This job also runs in the test stage.
-  stage: test    # It can run at the same time as unit-test-job (in parallel).
-  script:
-    - echo "dokcer images"
+    - echo "docker images"
     - sleep 3
 
-push:
-  stage: push
-  only:
-    - main
-    - dev
+push_image:
+  stage: push_image
+  image: docker:stable
+  services:
+    - docker:dind
   script:
-    - docker push "samankhalife":"random-num"
-
-new_release:
-  stage: new_release
-  script:
-    - echo "Create new release."
-  release:
-    tag_name: "latest"
-    description: "Release for latest"
+    - docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD
+    - docker push $DOCKER_HUB_USERNAME/$IMAGE_NAME:$TAG
