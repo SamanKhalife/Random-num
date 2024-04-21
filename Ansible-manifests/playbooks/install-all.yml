@@ -1,0 +1,6 @@
+---
+
+- import_playbook: docker.yml
+- import_playbook: kubernetes.yml
+- import_playbook: prometheus.yml
+- import_playbook: grafana.yml
