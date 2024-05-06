@@ -1,0 +1,21 @@
+---
+name: Lint
+
+on:  # yamllint disable-line rule:truthy
+  push: null
+  pull_request: null
+
+permissions: { }
+
+jobs:
+
+  Super-Linter:
+    runs-on: ubuntu-latest     # name of a container (environment) to run your automations in
+    steps:
+      - name: Super-Linter
+        uses: super-linter/super-linter@v5.7.2
+
+  # run-ansible-lint
+      - name: run-ansible-lint
+        uses: ansible/ansible-lint@v24.2.3
+        
