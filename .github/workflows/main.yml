@@ -1,21 +1,135 @@
 ---
-name: Lint
+name: Python Lint CI
 
-on:  # yamllint disable-line rule:truthy
-  push: null
-  pull_request: null
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
-permissions: { }
+permissions:
+  contents: read
+  packages: write
+  id-token: write
+  attestations: write
 
 jobs:
+  super-lint:
+  name: Lint code base
+  runs-on: ubuntu-latest
+  steps:
+    - name: Checkout code
+      uses: super-linter/super-linter@v5.7.2
+env:
+      Default_Branch: main 
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  Super-Linter:
-    runs-on: ubuntu-latest     # name of a container (environment) to run your automations in
+lint:
+    name: Python Lint
+    runs-on: ubuntu-latest
+
     steps:
-      - name: Super-Linter
-        uses: super-linter/super-linter@v5.7.2
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-  # run-ansible-lint
-      - name: run-ansible-lint
-        uses: ansible/ansible-lint@v24.2.3
-        
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+
+    - name: Install dependencies
+      run: pip install flake8
+
+    - name: Run flake8
+      run: |
+        # Adjust this command to lint the appropriate directories or files
+        flake8 .
+
+## Docker Image Publisher
+  build-n-push-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build and Push Image to Docker Hub
+        uses: kjuly/docker-image-publisher@main
+        with:
+          image_name: user/image
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          token: ${{ secrets.DOCKERHUB_TOKEN }}
+
+
+
+name: Combined CI/CD Pipeline ()
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  packages: write
+  id-token: write
+  attestations: write
+
+jobs:
+  lint:
+    name: Lint Code Base
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: Install dependencies
+        run: pip install flake8
+
+      - name: Run flake8
+        run: |
+          flake8 .
+
+  super-lint:
+    name: Super Linter
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run Super-Linter
+        uses: github/super-linter@v5.7.2
+        env:
+          Default_Branch: main
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+
+
+
+
+#$####### main (asli)
+  build-n-push-image:
+    name: Build and Push Docker Image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build Docker Image
+        run: docker build -t user/image .
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Push Image to Docker Hub
+        run: docker push user/image
+
