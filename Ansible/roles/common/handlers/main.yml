@@ -1,0 +1,7 @@
+---
+- name: Reboot system
+  reboot:
+    msg: "Reboot initiated by Ansible for disabling swap"
+    pre_reboot_delay: 10
+    post_reboot_delay: 30
+    reboot_timeout: 600

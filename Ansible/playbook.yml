@@ -1,0 +1,37 @@
+---
+- name: Configure servers
+  hosts: all
+  become: true
+  roles:
+    - role: common
+      tags: 
+        - common
+        - update_system
+        - disable_swap
+
+    - role: prometheus
+      tags: prometheus
+
+    - role: grafana
+      tags: grafana
+
+    - role: docker
+      tags: docker
+
+    - role: helm
+      tags: helm
+
+    - role: kubernetes
+      tags: kubernetes
+
+    - role: efk
+      tags: efk
+
+    - role: rabbitmq
+      tags: rabbitmq
+
+    - role: postgres
+      tags: postgres
+
+    - role: haproxy
+      tags: haproxy

@@ -1,8 +1,0 @@
----
-
-- name: default action on all host
-  hosts: all
-  roles:
-    - default
-
-# ansible-playbook playbooks/default.yml
