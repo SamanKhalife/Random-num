@@ -18,14 +18,29 @@ prometheus-node exporter
 fluentd
 mariadb
 ```
-## host port usege map
 
-|   kubernetes | ansible      | terraform    | gitlab ci    | rabbitmq     | elastic      | kinbana      | grafana      | fluentd      | mariadb      | prometheus-node exporter |
-| ------------ | ------------ | ------------ | ------------ | ------------ | ------------ | ------------ | ------------ | ------------ | ------------ | ------------ |
-|              |              |              |              |              |              |              | 3000         |              |              |              |
-|              |              |              |              |              |              |              |              |              |              |              |
-|              |              |              |              |              |              |              |              |              |              |              |
+## applying terraform
 
+```
+cd /random-num/terraform
+```
+Initializing Terraform: to Downloads and installs plugins , Validates and downloads modules 
+```
+terraform init
+```
+Creating an execution plan
+```
+terraform plan
+```
+ Applying the execution plan
+```
+terraform apply
+```
+
+If needed, destroy all resources managed by this configuration
+```
+terraform destroy
+```
 
 ## what ansible will do for us ???  
 
@@ -45,8 +60,17 @@ deploying kibana
 deploying rabbitmq
 deploying postgres
 installing haproxy.ingress
-
 ```
+
+## host port usege map
+
+|   kubernetes | ansible      | terraform    | gitlab ci    | rabbitmq     | elastic      | kinbana      | grafana      | fluentd      | mariadb      | prometheus-node exporter |
+| ------------ | ------------ | ------------ | ------------ | ------------ | ------------ | ------------ | ------------ | ------------ | ------------ | ------------ |
+|              |              |              |              |              |              |              | 3000         |              |              |              |
+|              |              |              |              |              |              |              |              |              |              |              |
+|              |              |              |              |              |              |              |              |              |              |              |
+
+
 
 
 
