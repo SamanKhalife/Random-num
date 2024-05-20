@@ -44,23 +44,34 @@ terraform destroy
 
 ## what ansible will do for us ???  
 
-ansible tasks:
+ansible tasks and tags:
+
+
+| Role Name               | Tags                   | Role-Location    | 
+| ------------------------| -----------------------| ---------------- |
+| updating system         | full,update            | update_system    |
+| unabling swap           | full,disable_swap      | update_system    |
+| installing prometheus   | full,monitoring        | monitoring       |
+| installing grafana      | full,monitoring        | monitoring       |
+| configuring grafana     | full,monitoring        | monitoring       |
+| installing docker       | full,docker            | docker           |
+| installing kubernetes   | full,K8s               | Kubernetes       |
+| installing calico       | full,network_policy    | Kubernetes       |
+| installing helm         | full,package_management| Kubernetes       |
+| deploying EFK           | full,logging           | logging          |
+| deploying elasticsearch | full,logging           | logging          |
+| deploying kibana        | full,logging           | logging          |
+| deploying rabbitmq      | full,messaging         | messaging        |
+| deploying postgres      | full,database          | database         |
+| installing haproxy.ingress| full,haproxy_ingress | haproxy_ingress |
+
+
+
+deployment by ansible using tags
 ```
-updating system
-unabling swap
-installing prometheus
-installing grafana
-configuring grafana
-instaliing docker
-installing helm
-installing kubernetes and dependencies
-deploying EFK
-deploying elasticsearch
-deploying kibana
-deploying rabbitmq
-deploying postgres
-installing haproxy.ingress
+ansible-playbook -i hosts playbook.yml --tags "tag,tag,..." 
 ```
+
 
 ## host port usege map
 
