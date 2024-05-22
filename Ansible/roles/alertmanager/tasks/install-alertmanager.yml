@@ -1,0 +1,47 @@
+---
+- name: Make sure the installation path exists
+  ansible.builtin.file:
+    path: "{{install_path}}"
+    owner: '{{ user }}'
+    group: '{{ group }}'
+    mode: 0755
+    recurse: yes
+    state: directory
+  become: true
+
+- name: Make sure the storage path exists
+  ansible.builtin.file:
+    path: "{{alertmanager_database}}"
+    owner: '{{ user }}'
+    group: '{{ group }}'
+    mode: 0755
+    recurse: yes
+    state: directory
+  become: true
+
+#- name: Unarchive alertmanager archive 
+#  ansible.builtin.unarchive:
+#    src: '{{alertmanager_url}}'
+#    dest: "{{install_path}}"
+#    remote_src: yes
+#    extra_opts:
+#      - --strip-components=1
+#  become: true
+#
+- ansible.builtin.template:
+    src: 'alertmanager.yml.j2'
+    dest: "{{install_path}}/alertmanager.yml"
+  become: true
+
+- template:
+    src: 'alertmanager.service.j2'
+    dest: '/etc/systemd/system/alertmanager.service'
+  become: true
+
+- name: Restart alertmanager service 
+  ansible.builtin.systemd:
+    state: restarted
+    enabled: yes
+    daemon_reload: yes
+    name : 'alertmanager'
+  become: true

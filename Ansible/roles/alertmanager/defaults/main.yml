@@ -1,0 +1,8 @@
+---
+user: alertmanager
+group: alertmanager
+install_path: /opt/alertmanager/
+alertmanager_url: https://github.com/prometheus/alertmanager/releases/download/v0.26.0/alertmanager-0.26.0.linux-amd64.tar.gz
+web_hook: https://webhook.site/a2980148-da59-41a2-9c09-b1dc86ee0888
+alertmanager_database: /data/alertmanager/
+data_retention: 120h 

@@ -1,37 +1,152 @@
 ---
-- name: Configure servers
+- name: node_exporter_install
   hosts: all
-  become: true
   roles:
-    - role: common
-      tags: 
-        - common
-        - update_system
-        - disable_swap
+   - node_exporter
+  tags: 
+    - master
+    - worker
 
-    - role: prometheus
-      tags: prometheus
 
-    - role: grafana
-      tags: grafana
 
-    - role: docker
-      tags: docker
+- name: prometheus_install
+  hosts: all
+  roles:
+   - prometheus
+  tags: 
+    - master
+    - worker
 
-    - role: helm
-      tags: helm
 
-    - role: kubernetes
-      tags: kubernetes
+- name: alertmanager_install 
+  hosts: all
+  roles:
+   - alertmanager
+  tags:
+    - master
+    - worker
 
-    - role: efk
-      tags: efk
 
-    - role: rabbitmq
-      tags: rabbitmq
+- name: deploying_EFK_helm
+  hosts: all
+  roles:
+    - 
+    - 
+  tags:
+    - master
 
-    - role: postgres
-      tags: postgres
 
-    - role: haproxy
-      tags: haproxy
+- name: swap_off
+  hosts: all
+  roles:
+    - 
+  tags: 
+    - master
+    - worker
+
+- name: helm_install
+  hosts: all
+  roles:
+    - 
+    - 
+  tags: 
+    - master
+
+
+- name: kubernetes_install
+  hosts: all
+  roles:
+    - 
+    - 
+  tags: 
+    - master
+    - worker
+
+- name: kubernetes_setup
+  hosts: all
+  roles:
+    - 
+    - 
+  tags: 
+    - master
+
+
+- name: fluentd_deamonset
+  hosts: all
+  roles:
+    - 
+    - 
+  tags: 
+    - master
+
+
+- name: haproxy_ingress
+  hosts: all
+  roles:
+    - 
+    - 
+  tags: 
+    - master
+
+
+- name: deploying_postgres_helm
+  hosts: all
+  roles:
+    - 
+    - 
+  tags:
+    - master
+
+
+- name: deploying_rabbitmq_helm
+  hosts: all
+  roles:
+    - 
+    - 
+  tags:
+    - master
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# - name: setup and configuration
+#   hosts: all
+
+#   pre_tasks:
+#     - name: Install prerequisite packages
+#       apt:
+#         name: "{{ item }}"
+#         state: present
+#       with_items:
+#         - curl
+#         - wget
+
+#   roles:
+#     - role: node_exporter
+#     - role: prometheus
+#     - role: alertmanager
+#     - role: grafana
+#     - role: helm
+#     - role: kubernetes
+#     - role: fluentd
+#     - role: haproxy
+#     - role: mariadb
+#     - role: rabbitmq

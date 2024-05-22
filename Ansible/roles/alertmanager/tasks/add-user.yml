@@ -1,0 +1,15 @@
+---
+- name: Ensure group alertmanager exists
+  ansible.builtin.group:
+    name: '{{ group }}'
+    state: present
+    system: yes
+  become: true
+
+- name: add alertmanager user
+  user:
+    name: '{{ user }}'
+    shell: /usr/sbin/nologin
+    group: '{{ group }}'
+    system: true
+  become: true
