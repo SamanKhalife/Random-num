@@ -47,23 +47,22 @@ terraform destroy
 ansible tasks and tags:
 
 
-| Role Name               | Tags                   | Role-Location    | 
-| ------------------------| -----------------------| ---------------- |
-| updating system         | full,update            | update_system    |
-| unabling swap           | full,disable_swap      | update_system    |
-| installing prometheus   | full,monitoring        | monitoring       |
-| installing grafana      | full,monitoring        | monitoring       |
-| configuring grafana     | full,monitoring        | monitoring       |
-| installing docker       | full,docker            | docker           |
-| installing kubernetes   | full,K8s               | Kubernetes       |
-| installing calico       | full,network_policy    | Kubernetes       |
-| installing helm         | full,package_management| Kubernetes       |
-| deploying EFK           | full,logging           | logging          |
-| deploying elasticsearch | full,logging           | logging          |
-| deploying kibana        | full,logging           | logging          |
-| deploying rabbitmq      | full,messaging         | messaging        |
-| deploying postgres      | full,database          | database         |
-| installing haproxy.ingress| full,haproxy_ingress | haproxy_ingress |
+| Role Name               | Tags                   | Role-Location    |  whichh Node deployed | 
+| ------------------------| -----------------------| ---------------- | ---------------- | 
+| updating system         | full,update            | update_system    | master,worker1,work2 |
+| unabling swap           | full,disable_swap      | update_system    | master,worker1,work2 | 
+| installing prometheus   | full,monitoring        | monitoring       | master,worker1,work2 | 
+| installing grafana      | full,monitoring        | monitoring       | helm deploy on k8s|
+| installing docker       | full,docker            | docker           | master,worker1,work2 |
+| installing kubernetes   | full,K8s               | Kubernetes       | master,worker1,work2 | 
+| installing calico       | full,network_policy    | Kubernetes       | master|
+| installing helm         | full,package_management| Kubernetes       | master|
+| deploying EFK           | full,logging           | logging          | helm deploy on k8s|
+| deploying elasticsearch | full,logging           | logging          | helm deploy on k8s|
+| deploying kibana        | full,logging           | logging          | helm deploy on k8s|
+| deploying rabbitmq      | full,messaging         | messaging        | helm deploy on k8s|
+| deploying postgres      | full,database          | database         | helm deploy on k8s|
+| installing haproxy.ingress| full,haproxy_ingress | haproxy_ingress | master |
 
 
 
@@ -75,13 +74,13 @@ ansible-playbook -i hosts playbook.yml --tags "tag,tag,..."
 
 ## host port usege map
 
-|   kubernetes | ansible      | terraform    | gitlab ci    | rabbitmq     | elastic      | kinbana      | grafana      | fluentd      | mariadb      | prometheus-node exporter |
-| ------------ | ------------ | ------------ | ------------ | ------------ | ------------ | ------------ | ------------ | ------------ | ------------ | ------------ |
-|              |              |              |              |              |              |              | 3000         |              |              |              |
-|              |              |              |              |              |              |              |              |              |              |              |
-|              |              |              |              |              |              |              |              |              |              |              |
-
-
+|kubernetes(master)|kubernetes(worker)|rabbitmq|node-exporter|prometheus|mariadb|elastic| kinbana| grafana | fluentd |
+| ---------------- | ---------------- | ------ | ----------- | -------- | ----- | ----- | ------ | ------- | ------- | 
+|6443     |10250      |5672,5671        |9100 |9090|3306|9200|5601|3000|9880 |
+|2379-2380|10256      |5552,5551        |     |    |    |9300|    |    |24224|
+|10250    |30000-32767|6000 through 6500|     |    |    |    |    |    |     |
+|10259    |           |25672            |     |    |    |    |    |    |     |
+|10257    |           |15672, 15671     |     |    |    |    |    |    |     |
 
 
 
