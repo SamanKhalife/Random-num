@@ -1,0 +1,11 @@
+[Unit]
+Description=Cadvisor Server
+After=network.target
+
+[Service]
+User={{user}}
+Type=simple
+ExecStart=/opt/cadvisor/cadvisor --port {{ cadvisor_port }} {{ cadvisor_runtime_options }}
+
+[Install]
+WantedBy=multi-user.target
