@@ -1,0 +1,41 @@
+---
+
+- name: Make sure the installation path exists
+  ansible.builtin.file:
+    path: "{{install_path}}/bin"
+    owner: '{{ user }}'
+    group: '{{ group }}'
+    mode: 0755
+    recurse: yes
+    state: directory
+  become: true
+
+- name: Unarchive exporter archive 
+  ansible.builtin.unarchive:
+    src: '{{exporter_url}}'
+    dest: "{{install_path}}/bin"
+    remote_src: yes
+    extra_opts:
+      - --strip-components=1
+  become: true
+  # become_user: '{{ user }}'
+
+- name: Make Directory for textfile_collector
+  file:
+    path: "{{install_path}}/textfile_collector"
+    state: directory
+    mode : 0755
+  become: true
+
+- template:
+    src: 'node-exporter.service.j2'
+    dest: '/etc/systemd/system/node-exporter.service'
+  become: true
+
+- name: Restart service 
+  ansible.builtin.systemd:
+    state: restarted
+    enabled: yes
+    daemon_reload: yes
+    name : 'node-exporter'
+  become: true
