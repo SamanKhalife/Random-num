@@ -1,23 +1,37 @@
 ---
-# file: roles/tasks/main.yml
-
-- name: be sure ntp is installed
-  yum:
-    name: ntp
+- name: Ensure dependencies are installed.
+  ansible.builtin.apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
     state: present
-  tags: ntp
+  become: true
 
-- name: be sure ntp is configured
-  template:
-    src: ntp.conf.j2
-    dest: /etc/ntp.conf
-  notify:
-    - restart ntpd
-  tags: ntp
+- name: Add  apt key.
+  ansible.builtin.apt_key:
+    url: "{{ grafana_apt_gpg_key }}"
+    # dest: /etc/apt/trusted.gpg.d/grafana.gpg
+    # mode: '0644'
+  # register: add_repository_key  
+  become: true
 
-- name: be sure ntpd is running and enabled
-  service:
-    name: ntpd
-    state: started
-    enabled: yes
-  tags: ntp
+
+- name: Add grafana repository
+  ansible.builtin.apt_repository:
+    repo: "{{grafana_repo}}"
+    state: present
+  become: true
+
+- name: Install grafana package
+  ansible.builtin.apt:
+    pkg: grafana
+    state: latest
+    update_cache: true
+  become: true
+- name: Install grafana package
+  ansible.builtin.apt:
+    pkg: neofetch
+    state: absent
+    update_cache: true
+  become: true
+  notify: start grafana service 
