@@ -1,0 +1,97 @@
+---
+- name: Create download directory
+  ansible.builtin.file:
+    state: directory
+    mode: "u=rwx,go=rx"
+    dest: "{{ helm_download_dir }}"
+
+- name: Download SHA256 sum
+  ansible.builtin.get_url:
+    url: "{{ helm_mirror }}/{{ helm_redis_filename }}.sha256"
+    dest: "{{ helm_download_dir }}/{{ helm_redis_filename }}.sha256"
+    force: false
+    use_proxy: true
+    validate_certs: true
+    mode: "u=rw,go=r"
+
+- name: Read SHA256 sum
+  ansible.builtin.slurp:
+    src: "{{ helm_download_dir }}/{{ helm_redis_filename }}.sha256"
+  register: helm_sha256sum
+
+- name: Download
+  ansible.builtin.get_url:
+    url: "{{ helm_mirror }}/{{ helm_redis_filename }}"
+    dest: "{{ helm_download_dir }}/{{ helm_redis_filename }}"
+    checksum: "sha256:{{ helm_sha256sum.content | b64decode | trim }}"
+    force: false
+    use_proxy: true
+    validate_certs: true
+    mode: "u=rw,go=r"
+
+- name: Check current version
+  ansible.builtin.command: >
+    {{ helm_install_dir }}/helm version --client --template {{ "'{{ if .Version }}{{ .Version }}{{ else }}{{ .Client.SemVer }}{{ end }}'" }}
+  register: helm_current_version
+  failed_when: false
+  changed_when: false
+
+- name: Current version
+  ansible.builtin.debug:
+    msg: "{{ helm_current_version.stdout }}"
+  when:
+    - helm_current_version.rc == 0
+
+- name: Remove existing installation
+  become: true
+  ansible.builtin.file:
+    path: "{{ helm_install_dir }}"
+    state: absent
+  when:
+    - helm_current_version.rc == 0
+    - helm_current_version.stdout != ('v' + helm_version)
+
+- name: Create the Helm installation dir
+  become: true
+  ansible.builtin.file:
+    state: directory
+    owner: root
+    group: root
+    mode: "u=rwx,go=rx"
+    dest: "{{ helm_install_dir }}"
+
+- name: Install prerequisite packages
+  become: true
+  ansible.builtin.apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+  vars:
+    packages:
+      - tar
+      - unzip
+      - gzip
+
+- name: Install Helm
+  become: true
+  ansible.builtin.unarchive:
+    src: "{{ helm_download_dir }}/{{ helm_redis_filename }}"
+    remote_src: true
+    dest: "{{ helm_install_dir }}"
+    extra_opts:
+      - "--strip-components=1"
+    owner: root
+    group: root
+    mode: "o-w"
+    creates: "{{ helm_install_dir }}/helm"
+
+- name: Create Helm link
+  become: true
+  ansible.builtin.file:
+    src: "{{ helm_install_dir }}/helm"
+    dest: "/usr/local/bin/helm"
+    state: link
+    owner: root
+    group: root
+    mode: "u=rwx,go=rx"
