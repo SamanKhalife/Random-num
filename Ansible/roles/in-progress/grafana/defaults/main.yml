@@ -1,0 +1,4 @@
+---
+# defaults file for grafana
+grafana_apt_gpg_key: https://apt.grafana.com/gpg.key
+grafana_repo: "deb  https://apt.grafana.com stable main" 
