@@ -1,9 +1,0 @@
----
-user: prometheus
-group: prometheus
-install_path: /opt/prometheus/
-prometheus_database: /data/prometheus/
-scrape_interval_global: 15s
-storage_tsdb_retention_time: 15d
-endpoints: ['https://mon.skill.tech','https://mon.job-it.me','http://pet.job-it.me', 'https://git.skill.tech' ]
-prometheus_url: https://github.com/prometheus/prometheus/releases/download/v2.48.0/prometheus-2.48.0.linux-amd64.tar.gz
