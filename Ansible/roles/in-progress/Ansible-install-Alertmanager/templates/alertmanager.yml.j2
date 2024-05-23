@@ -1,0 +1,7 @@
+route:
+  group_by: ['alertname']
+  receiver: 'web.hook'
+receivers:
+  - name: 'web.hook'
+    webhook_configs:
+      - url: '{{web_hook}}'

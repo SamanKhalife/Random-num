@@ -1,0 +1,15 @@
+[Unit]
+Description=alertmanager Server
+After=network-online.target
+
+[Service]
+User={{user}}
+Group={{group}}
+Restart=on-failure
+ExecStart={{install_path}}alertmanager \
+--config.file={{install_path}}alertmanager.yml \
+--data.retention={{data_retention}} \
+--storage.path={{alertmanager_database}}
+
+[Install]
+WantedBy=multi-user.target
