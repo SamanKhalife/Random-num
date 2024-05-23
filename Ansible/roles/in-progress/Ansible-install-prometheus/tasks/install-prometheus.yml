@@ -1,0 +1,52 @@
+---
+- name: Make sure the installation path exists
+  ansible.builtin.file:
+    path: "{{install_path}}"
+    owner: '{{ user }}'
+    group: '{{ group }}'
+    mode: 0755
+    recurse: yes
+    state: directory
+  become: true
+
+- name: Make sure the storage path exists
+  ansible.builtin.file:
+    path: "{{prometheus_database}}"
+    owner: '{{ user }}'
+    group: '{{ group }}'
+    mode: 0755
+    recurse: yes
+    state: directory
+  become: true
+
+- name: Unarchive prometheus archive 
+  ansible.builtin.unarchive:
+    src: '{{prometheus_url}}'
+    dest: "{{install_path}}"
+    remote_src: yes
+    extra_opts:
+    - --strip-components=1
+  become: true
+
+- ansible.builtin.template:
+    src: 'prometheus.yml.j2'
+    dest: "{{install_path}}/prometheus.yml"
+  become: true
+
+- ansible.builtin.copy:
+    src: 'rules.yml'
+    dest: "{{install_path}}/rules.yml"
+  become: true
+
+- template:
+    src: 'prometheus.service.j2'
+    dest: '/etc/systemd/system/prometheus.service'
+  become: true
+
+- name: Restart prometheus service 
+  ansible.builtin.systemd:
+    state: restarted
+    enabled: yes
+    daemon_reload: yes
+    name : 'prometheus'
+  become: true
