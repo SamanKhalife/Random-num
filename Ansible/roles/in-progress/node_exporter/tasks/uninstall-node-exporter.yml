@@ -1,0 +1,42 @@
+---
+- name: Make sure the installation path is deleted
+  ansible.builtin.file:
+    path: "{{install_path}}/bin"
+    # recurse: yes
+    state: absent    
+  become: true
+  tags: deleted
+
+- name: delete Directory for textfile_collector
+  file:
+    path: "{{install_path}}/textfile_collector"
+    state: absent    
+  become: true
+  tags: deleted
+
+- file:
+    path: '/etc/systemd/system/node-exporter.service'
+    state: absent    
+
+  become: true
+  tags: deleted
+
+- name: stop service 
+  ansible.builtin.systemd:
+    state: stopped
+    enabled: false
+    daemon_reload: yes
+    name : 'node-exporter'
+  become: true
+  tags: deleted
+  ignore_errors: true
+
+
+- name: 'Remove the user {{ user }}'
+  ansible.builtin.user:
+    group: '{{group}}'
+    name: '{{ user }}'
+    state: absent
+    remove: yes
+  become: true
+  tags: deleted
