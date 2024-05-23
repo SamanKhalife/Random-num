@@ -1,6 +1,0 @@
----
-- include_tasks: uninstall-node-exporter.yml
-  tags: deleted
-- include_tasks: add-user.yml
-- include_tasks: install-node-exporter.yml
-
