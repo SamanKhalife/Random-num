@@ -1,3 +1,0 @@
----
-- include_tasks: add-user.yml
-- include_tasks: install-prometheus.yml
