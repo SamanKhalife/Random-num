@@ -1,4 +1,3 @@
-from flask import Flask, render_template
 import schedule
 import time
 import random
@@ -13,7 +12,6 @@ import pika
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 
-app = Flask(__name__)
 
 # RabbitMQ configuration
 rabbitmq_host = 'rabbitmq'  # RabbitMQ service name in Kubernetes
@@ -58,12 +56,10 @@ except Exception as e:
 
 
 
-
 def generate_random_string():
     characters = string.ascii_letters + string.digits
     random_string = ''.join(random.choice(characters) for _ in range(15))
     return random_string
-
 
 
 
@@ -107,26 +103,8 @@ schedule.every(1).seconds.do(send_to_mariadb_and_rabbitmq)
 
 
 
-
-
 def run_schedule():
     while True:
         schedule.run_pending()
         time.sleep(1)
 
-
-
-
-
-
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-if __name__ == '__main__':
-    # Start the schedule in a separate thread
-    schedule_thread = threading.Thread(target=run_schedule)
-    schedule_thread.start()
-
-    # Start the Flask application directly
-    app.run(host='0.0.0.0', port=8569, debug=True)
