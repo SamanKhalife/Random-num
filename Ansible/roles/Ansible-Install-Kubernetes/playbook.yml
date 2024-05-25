@@ -1,0 +1,18 @@
+---
+# playbook.yml
+
+- hosts: master
+  become: yes
+  roles:
+    - install_dependencies
+    - install_kubernetes
+    - configure_calico_and_master
+    - configure_calico
+
+- hosts: worker
+  become: yes
+  roles:
+    - install_dependencies
+    - install_kubernetes
+    - configure_containerd
+    - worker_setup
