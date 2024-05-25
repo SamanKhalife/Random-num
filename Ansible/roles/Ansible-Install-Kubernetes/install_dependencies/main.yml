@@ -1,0 +1,17 @@
+---
+
+- name: Update apt cache
+  hosts: all
+  ansible.builtin.apt:
+    update_cache: yes
+
+- name: Install required packages
+  hosts: all
+  ansible.builtin.apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gpg
+    state: present
+    update_cache: yes
