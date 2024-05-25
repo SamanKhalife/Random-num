@@ -1,27 +1,29 @@
-# Use an official Ubuntu image as a parent image
-FROM ubuntu:20.04
+# Use the official Ubuntu image from the Docker Hub
+FROM ubuntu:22.04
 
-# Set the working directory to /app
+RUN apt-get update && \
+apt-get install -y python3 python3-pip && \
+apt-get clean && \
+rm -rf /var/lib/apt/lists/*
+
+
 WORKDIR /app
 
-# Update and install necessary packages
-RUN apt-get update && \
-    apt-get install -y python3 python3-pip && \
-    rm -rf /var/lib/apt/lists/*
 
-# Copy the current directory contents into the container at /app
 COPY . /app
-COPY requirements.txt .
+COPY requirements.txt /app
 
-# Install any needed packages specified in requirements.txt
+
 RUN pip3 install --no-cache-dir -r requirements.txt
 
 
-# Make port 8585 available to the world outside this container
+ENV FLASK_APP=random_num.py
+
+
 EXPOSE 8569
 
-# Run the application when the container launches
-CMD ["python3", "random.num.py"]
+CMD ["python3", "random_num.py"]
 
 # docker build -t samankhalife/random.num.py:latest .
+# docker push  samankhalife/random.num.py:latest 
 # docker run -p 5000:8569 random.num.py
