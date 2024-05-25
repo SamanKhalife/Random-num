@@ -1,4 +1,4 @@
 *.dll
 *.png
-*.tf
-Terraform
+hetzner.tf
+arvan.tf
