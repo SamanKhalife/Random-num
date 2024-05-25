@@ -1,0 +1,8 @@
+---
+# handlers file for grafana
+- name: start grafana service
+  ansible.builtin.service:
+    name: grafana-server.service
+    state: started
+    enabled: yes
+  become: yes
