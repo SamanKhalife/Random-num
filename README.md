@@ -84,5 +84,12 @@ ansible-playbook -i hosts playbook.yml --tags "tag,tag,..."
 
 
 
+ssh-config file
+```
+~/.ssh/config
+```
+
+
+
 
 
