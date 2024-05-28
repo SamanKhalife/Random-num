@@ -1,10 +1,10 @@
-[kube_control_plane]
+[kubernetes-master]
 master1
 
-[workers]
+[kubernetesworkers]
 worker[1:2]
 
-[cluster:children]
+[kubernetes-cluster:children]
 master
 workers
 
