@@ -1,6 +1,6 @@
 ---
 - name: Distribute join command file
-  hosts: workers
+  hosts: kubernetes-workers
   become: true
   tasks:
     - name: Copy join command file to worker nodes
@@ -11,3 +11,4 @@
 
     - name: Join worker nodes to the cluster
       shell: /root/kubeadm_join_command.sh
+...

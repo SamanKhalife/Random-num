@@ -1,9 +1,6 @@
 ---
----
-# roles/install_kubernetes/tasks/main.yml
-
-- name: Install Kubernetes and configure containerd
-  hosts: all
+- name: Install kubeadm kubelet kubectl
+  hosts: master
   become: true
   tasks:
     - name: Import Kubernetes GPG key
@@ -18,7 +15,7 @@
       apt:
         update_cache: yes
 
-    - name: Install Kubernetes packages
+    - name: Install Kubernetes packages on master
       apt:
         name: "{{ item }}"
         state: present
@@ -26,8 +23,11 @@
         - kubelet
         - kubeadm
         - kubectl
+      tags: 
+        - kubernetes
+        - master
 
-    - name: Mark Kubernetes packages as held
+    - name: Mark Kubernetes packages as held on master
       apt:
         name: "{{ item }}"
         state: held
@@ -35,4 +35,8 @@
         - kubelet
         - kubeadm
         - kubectl
+      tags: 
+        - kubernetes
+        - maste
+...
 
