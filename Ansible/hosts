@@ -10,6 +10,7 @@ master1
 [kubernetes-workers]
 worker[1:2]
 
+
 [kubernetes-cluster:children]
 master
 workers
