@@ -10,6 +10,9 @@ master1
 [kubernetes-workers]
 worker[1:2]
 
+[calico]
+master1
+
 [kubernetes-cluster:children]
 master
 workers
