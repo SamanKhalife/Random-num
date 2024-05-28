@@ -1,4 +1,4 @@
-[master]
+[kube_control_plane]
 master1
 
 [workers]
