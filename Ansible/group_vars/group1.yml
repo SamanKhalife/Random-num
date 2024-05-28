@@ -1,4 +1,0 @@
----
-
-webserver: "nginx"
-max_of: "65000"

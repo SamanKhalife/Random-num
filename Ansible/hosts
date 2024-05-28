@@ -1,0 +1,10 @@
+[master]
+master1
+
+[workers]
+worker[1:2]
+
+[cluster:children]
+master
+workers
+
