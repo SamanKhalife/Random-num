@@ -1,5 +1,17 @@
-external_named_list:
-   - item1
-   - item2
-   - item3
-   - item4
+configuration:
+   - Ansible-Change-Dns
+   - Ansible-Disabling-swap
+
+install_to_host:
+   - Ansible-Install-Docker
+   - Ansible-Install-Kubernetes
+   - Ansible-Install-Helm
+
+deploy:
+   - Ansible-Deploy-Fluentd-Deomonset
+   - Ansible-Helm-Deploy-Grafana
+   - Ansible-Helm-Deploy-Haproxy
+   - Ansible-Helm-Deploy-Nginx-Ingress
+   - Ansible-Helm-Deploy-Postgress
+   - Ansible-Helm-Deploy-Rabbitmq
+   - Ansible-Helm-Deploy-elasticsearch
