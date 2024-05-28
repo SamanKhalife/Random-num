@@ -1,3 +1,9 @@
+[all]
+master1
+worker1
+worker2
+
+
 [kubernetes-master]
 master1
 
