@@ -1,7 +1,7 @@
 [kubernetes-master]
 master1
 
-[kubernetesworkers]
+[kubernetes-workers]
 worker[1:2]
 
 [kubernetes-cluster:children]
