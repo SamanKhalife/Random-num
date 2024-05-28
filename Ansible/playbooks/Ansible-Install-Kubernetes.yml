@@ -9,28 +9,7 @@
 
 - name: installing-docker
   import_playbook: Ansible-Install-Docker
-  
 
-  # Variable: variables that will apply to the play, on all target systems
-
-
-  # Task: the list of tasks that will be executed within the play, this section
-  # can also be used for pre and post tasks
-
-
-  # Handlers: handlers that are executed as a notify key from a task
-
-
-  # Roles: list of roles to be imported into the play
-- name: Install-Kubernetes
-  hosts: k8s_cluster
-  gather_facts: False
-  any_errors_fatal: "{{ any_errors_fatal | default(true) }}"
-  environment: "{{ proxy_disable_env }}"
-  roles:
-    - { role: Ansible-Install-Kubernetes }
-    - { role: Ansible-Install-Kubernetes }
-    - { role: Ansible-Install-Kubernetes }
 ...
 
 
