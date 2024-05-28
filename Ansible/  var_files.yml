@@ -7,7 +7,7 @@ install_to_host:
    - Ansible-Install-Kubernetes
    - Ansible-Install-Helm
 
-deploy:
+deploy_to_kubernetes:
    - Ansible-Deploy-Fluentd-Deomonset
    - Ansible-Helm-Deploy-Grafana
    - Ansible-Helm-Deploy-Haproxy
