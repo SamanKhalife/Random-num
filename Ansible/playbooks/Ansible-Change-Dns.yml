@@ -1,0 +1,62 @@
+---
+- name: Set DNS servers in /etc/resolv.conf
+  hosts: all
+  become: true
+
+  vars:
+    dns_servers:
+      - "8.8.8.8"
+      - "8.8.4.4"
+
+  tasks:
+    - name: Backup /etc/resolv.conf
+      copy:
+        src: /etc/resolv.conf
+        dest: /etc/resolv.conf.backup
+        backup: yes
+
+    - name: Set DNS servers in /etc/resolv.conf
+      lineinfile:
+        path: /etc/resolv.conf
+        regexp: '^nameserver'
+        line: ''
+        state: absent
+
+    - name: Add DNS servers to /etc/resolv.conf
+      blockinfile:
+        path: /etc/resolv.conf
+        block: |
+          {% for dns in dns_servers %}
+          nameserver {{ dns }}
+          {% endfor %}
+        state: present
+
+    - name: Ensure DNS settings are persistent (Optional, for Ubuntu)
+      lineinfile:
+        path: /etc/systemd/resolved.conf
+        regexp: '^DNS='
+        line: 'DNS={{ dns_servers | join(" ") }}'
+        state: present
+      notify: Restart systemd-resolved
+
+  handlers:
+    - name: Restart systemd-resolved
+      service:
+        name: systemd-resolved
+        state: restarted
+
+
+...
+
+
+
+
+
+
+
+
+
+
+
+
+
