@@ -10,6 +10,10 @@
 
   vars_files:
     - var_files.yml
+    # configuration
+    # install_to_host
+    # deploy_to_kubernetes
+
 
   # Task: the list of tasks that will be executed within the play, this section
   # can also be used for pre and post tasks
