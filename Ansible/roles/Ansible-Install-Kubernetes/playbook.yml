@@ -2,7 +2,7 @@
 # playbook.yml
 
 - hosts: master
-  become: yes
+  become: true
   roles:
     - install_dependencies
     - install_kubernetes
@@ -10,7 +10,7 @@
     - configure_calico
 
 - hosts: worker
-  become: yes
+  become: true
   roles:
     - install_dependencies
     - install_kubernetes
