@@ -27,6 +27,8 @@
         group: "{{ ansible_user_id }}"
         mode: 0644
 
+  # - name: Doing some required thing
+  #   shell: "chown $(id -u):$(id -g) $HOME/.kube/config"
 
     - name: Install Calico CNI
       shell: kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.0/manifests/tigera-operator.yaml
