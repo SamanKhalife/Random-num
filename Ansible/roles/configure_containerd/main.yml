@@ -1,0 +1,51 @@
+---
+
+    - name: Create containerd directory
+      ansible.builtin.file: 
+        name: /etc/containerd
+        state: directory
+
+    - name: Render containerd default config
+      ansible.builtin.shell: containerd config default > /etc/containerd/config.toml
+      force: yes
+    
+    - name: Check if config.toml is updated
+      ansible.builtin.lineinfile:
+        path: /etc/containerd/config.toml
+        regexp: '^#[grpc]'
+        state: absent
+      check_mode: true
+      changed_when: false
+      register: containerd_config
+
+    - name: Modify Containerd configuration
+      replace:
+        path: /etc/containerd/config.toml
+        regexp: 'SystemdCgroup = false'
+        replace: 'SystemdCgroup = true'
+
+
+    - name: Restart containerd service
+      systemd:
+        name: containerd
+        daemon_reload: true
+        state: restarted
+        enabled: true 
+...
+
+
+
+    # - name: Copy containerd config file
+    #   copy:
+    #     src: /path/to/config.toml
+    #     dest: /etc/containerd/config.toml
+
+
+    # - name: enable SystemdCgroup for containerd
+    #   ansible.builtin.replace:
+    #     path: /etc/containerd/config.toml
+    #     regexp: '^(\s*)SystemdCgroup(.*)$'
+    #     replace: '\1SystemdCgroup = true'
+    #   notify:
+    #     - reload containerd
+    
