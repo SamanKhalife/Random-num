@@ -5,7 +5,6 @@
   tasks:
     - name: Disable swap
       command: swapoff -a
-      when: ansible_swaptotal_mb > 0
 
     - name: Remove swap entry from /etc/fstab
       replace:
