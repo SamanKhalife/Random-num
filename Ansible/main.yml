@@ -1,0 +1,28 @@
+---
+- import_playbook:
+- import_playbook:
+- import_playbook:
+- import_playbook:
+- import_playbook:
+- import_playbook:
+- import_playbook:
+- import_playbook:
+...
+
+
+
+# - name: My main playbook
+#   hosts: all
+#   become: true
+
+#   vars:
+#     playbooks:
+#       - playbook1.yml
+#       - playbook2.yml
+#       - playbook3.yml
+
+#   tasks:
+#     # ... tasks to run before including playbooks
+
+#     - loop: "{{ playbooks }}"
+#       with_items: "{{ item }}"
