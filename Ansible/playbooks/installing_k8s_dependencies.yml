@@ -13,6 +13,8 @@
       - ca-certificates
       - curl
       - gpg
+      - software-properties-common
     state: present
-    update_cache: yes
+    update_cache: true
+  tags: apt    
 ...
