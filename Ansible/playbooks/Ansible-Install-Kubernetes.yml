@@ -1,15 +1,22 @@
 ---
+- name: Run tasks linearly
+  hosts: all
+  gather_facts: False
+  strategy: linear
+  tasks:
+    - name: changing-dns-servers
+      import_playbook: Ansible-Change-Dns.yml
 
-- name: changing-dns-servers
-  import_playbook: Ansible-Change-Dns.yml
+    - name: Disabling-swap
+      import_playbook: Ansible-Disabling-swap.yml
 
+    - name: installing-docker
+      import_playbook: Ansible-Install-Docker.yml
 
-- name: Disabling-swap
-  import_playbook: Ansible-Disabling-swap.yml
-
-- name: installing-docker
-  import_playbook: Ansible-Install-Docker
-
+    - name: Include installing-docker role
+      include_role:
+        name: installing-docker
+      hosts: all_hosts
 ...
 
 
