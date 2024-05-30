@@ -24,7 +24,6 @@
         path: /swapfile
         state: absent
       when: swap_fstab.changed
-
 ...
 
 
