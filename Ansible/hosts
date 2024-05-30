@@ -4,7 +4,7 @@ worker1
 worker2
 
 
-[kubernetes-master]
+[kubernetes-masters]
 master1
 
 [kubernetes-workers]
