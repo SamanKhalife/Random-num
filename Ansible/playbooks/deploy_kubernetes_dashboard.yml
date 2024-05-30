@@ -3,7 +3,4 @@
   command: kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml
   environment:
     KUBECONFIG: /etc/kubernetes/admin.conf
-    ignore_errors: true
-    when: kube_deploy_dashboard  
-
 ...
