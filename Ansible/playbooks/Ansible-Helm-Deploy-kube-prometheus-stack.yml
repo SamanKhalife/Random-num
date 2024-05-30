@@ -1,0 +1,29 @@
+---
+- name: Helm-Deploy-kube-prometheus-stack
+  hosts: kubernetes-master
+  become: true
+  strategy: linear
+  tasks:
+    - name: Add repository
+      ansible.builtin.shell: helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+
+    - name: Update repo cache
+      ansible.builtin.shell: helm repo update
+
+    - name: Install
+      ansible.builtin.shell: >
+        helm install my-kube-prometheus-stack prometheus-community/kube-prometheus-stack --version 59.0.0
+...
+
+
+
+
+
+
+
+
+
+
+
+
+
