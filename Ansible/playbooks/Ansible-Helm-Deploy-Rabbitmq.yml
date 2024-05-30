@@ -1,20 +1,23 @@
 ---
+- name: Helm-Deploy-Rabbitmq
+  hosts: kubernetes-master
+  become: true
+  strategy: linear
+  tasks:
+    - name: Add repository
+      ansible.builtin.shell: helm repo add bitnami https://charts.bitnami.com/bitnami
 
-  # Target: where our play will run and options it will run with
+    - name: Update repo cache
+      ansible.builtin.shell: helm repo update
 
+    # - name: Copy values file
+    #   ansible.builtin.copy:
+    #     src: "ingress-nginx.yml"
+    #     dest: "/tmp/ingress-nginx.yml"
 
-  # Variable: variables that will apply to the play, on all target systems
-
-
-  # Task: the list of tasks that will be executed within the play, this section
-  # can also be used for pre and post tasks
-
-
-  # Handlers: handlers that are executed as a notify key from a task
-
-
-  # Roles: list of roles to be imported into the play
-
+    - name: Install
+      ansible.builtin.shell: >
+          helm install my-release bitnami/rabbitmq-cluster-operator
 
 ...
 
