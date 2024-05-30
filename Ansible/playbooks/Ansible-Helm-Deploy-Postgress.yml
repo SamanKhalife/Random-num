@@ -1,20 +1,12 @@
 ---
-
-  # Target: where our play will run and options it will run with
-
-
-  # Variable: variables that will apply to the play, on all target systems
-
-
-  # Task: the list of tasks that will be executed within the play, this section
-  # can also be used for pre and post tasks
-
-
-  # Handlers: handlers that are executed as a notify key from a task
-
-
-  # Roles: list of roles to be imported into the play
-
+- name: Helm-Deploy-Postgress
+  hosts: kubernetes-master
+  become: true
+  strategy: linear
+  tasks:
+    - name: Install
+      ansible.builtin.shell: >
+        helm install my-release oci://registry-1.docker.io/bitnamicharts/mariadb
 
 ...
 
