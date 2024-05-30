@@ -1,21 +1,30 @@
 ---
+- name: Helm-Deploy-Haproxy
+  hosts: kubernetes-master
+  become: true
+  strategy: linear
+  tasks:
+    # - name: Add repository
+    #   ansible.builtin.shell: helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 
-  # Target: where our play will run and options it will run with
+    # - name: Update repo cache
+    #   ansible.builtin.shell: helm repo update
 
+    # - name: Create namespace
+    #   ansible.builtin.shell: |
+    #     set -o pipefail && kubectl create namespace ingress-nginx --dry-run=client -o yaml | kubectl apply -f -
 
-  # Variable: variables that will apply to the play, on all target systems
+    # - name: Copy values file
+    #   ansible.builtin.copy:
+    #     src: "ingress-nginx.yml"
+    #     dest: "/tmp/ingress-nginx.yml"
 
-
-  # Task: the list of tasks that will be executed within the play, this section
-  # can also be used for pre and post tasks
-
-
-  # Handlers: handlers that are executed as a notify key from a task
-
-
-  # Roles: list of roles to be imported into the play
-
-
+    # - name: Install
+    #   ansible.builtin.shell: >
+    #     helm install myingress
+    #     ingress-nginx/ingress-nginx
+    #     -n ingress-nginx
+    #     --values /tmp/ingress-nginx.yml
 ...
 
 
