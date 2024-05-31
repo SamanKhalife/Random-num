@@ -1,9 +1,9 @@
 ---
 - name: Ansible-Helm-Deploy-Nginx-Ingress
-  hosts: kubernetes-master
+  hosts: kubernetes-masters[0]
   become: true
   roles:
-    - { role: Ansible-Helm-Deploy-Nginx-Ingress }
+    - role: Ansible-Helm-Deploy-Nginx-Ingress
 ...
 
 
