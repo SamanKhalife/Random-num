@@ -1,9 +1,9 @@
 ---
-
-# have role in role folder
-
-
-
+- name: Installing-Docker
+  hosts: kubernetes-master
+  become: true
+  roles:
+    - Ansible-Install-Docker
 ...
 
 
