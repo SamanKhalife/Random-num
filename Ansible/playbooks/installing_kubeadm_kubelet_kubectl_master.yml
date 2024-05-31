@@ -39,7 +39,7 @@
         - kubectl
       tags: 
         - kubernetes
-        - maste
+        - master
       retries: 3
       delay: 5
 ...
