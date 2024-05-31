@@ -7,7 +7,7 @@ terraform {
 }
 
 provider "arvan" {
-  api_key = "apikey 882830f4-4b27-5284-a534-2273968171bf"
+  api_key = ""
 }
 
 variable "region" {
