@@ -1,6 +1,6 @@
 ---
 - name: Helm-Deploy-elasticsearch
-  hosts: kubernetes-master
+  hosts: kubernetes-masters[0]
   become: true
   strategy: linear
   tasks:
@@ -21,7 +21,6 @@
 
     - name: Install
       ansible.builtin.shell: >
-
 ...
 
 
