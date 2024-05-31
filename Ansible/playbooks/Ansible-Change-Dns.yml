@@ -2,12 +2,10 @@
 - name: Set DNS servers in /etc/resolv.conf
   hosts: all
   become: true
-
   vars:
     dns_servers:
       - "8.8.8.8"
       - "8.8.4.4"
-
   tasks:
     - name: Backup /etc/resolv.conf
       copy:
@@ -44,8 +42,6 @@
       service:
         name: systemd-resolved
         state: restarted
-
-
 ...
 
 
