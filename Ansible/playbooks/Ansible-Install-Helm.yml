@@ -1,6 +1,6 @@
 ---
 - name: Installing-Helm
-  hosts: kubernetes-master
+  hosts: kubernetes-masters[0]
   become: true
   roles:
     - Ansible-Install-Helm
