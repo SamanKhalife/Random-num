@@ -1,6 +1,6 @@
 ---
-- name: Install Kubernetes and configure containerd on worker nodes
-  hosts: worker
+- name: Install Kubernetes and configure containerd on workers nodes
+  hosts: kubernetes-workers
   become: true
   tasks:
     - name: Import Kubernetes GPG key
