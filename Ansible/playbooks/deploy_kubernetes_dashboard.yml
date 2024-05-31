@@ -1,6 +1,8 @@
 ---
 - name: Deploy Dashboard
-  command: kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml
+  hosts: kubernetes-masters[0]
   environment:
     KUBECONFIG: /etc/kubernetes/admin.conf
+  tasks:
+    - ansible.builtin.shell: kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml
 ...
