@@ -1,6 +1,6 @@
 ---
 - name: Installing-Docker
-  hosts: kubernetes-master
+  hosts: all
   become: true
   roles:
     - Ansible-Install-Docker
