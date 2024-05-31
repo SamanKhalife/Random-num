@@ -1,6 +1,6 @@
 ---
 - name: Install kubeadm kubelet kubectl
-  hosts: master
+  hosts: kubernetes-masters
   become: true
   tasks:
     - name: Import Kubernetes GPG key
