@@ -1,6 +1,6 @@
 ---
 - name: Helm-Deploy-kube-prometheus-stack
-  hosts: kubernetes-master
+  hosts: kubernetes-masters[0]
   become: true
   strategy: linear
   tasks:
