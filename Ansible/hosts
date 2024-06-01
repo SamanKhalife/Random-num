@@ -4,14 +4,14 @@ worker1
 worker2
 
 
-[kubernetes-masters]
+[kubernetes_masters]
 master1
 
-[kubernetes-workers]
+[kubernetes_workers]
 worker[1:2]
 
 
-[kubernetes-cluster:children]
+[kubernetes_cluster:children]
 master
 workers
 
