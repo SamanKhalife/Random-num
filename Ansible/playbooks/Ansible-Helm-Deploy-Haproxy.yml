@@ -1,6 +1,6 @@
 ---
 - name: Helm-Deploy-Haproxy
-  hosts: kubernetes-masters[0]
+  hosts: kubernetes_masters[0]
   become: true
   strategy: linear
   tasks:
@@ -26,16 +26,3 @@
     #     -n ingress-nginx
     #     --values /tmp/ingress-nginx.yml
 ...
-
-
-
-
-
-
-
-
-
-
-
-
-

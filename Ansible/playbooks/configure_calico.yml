@@ -1,6 +1,6 @@
 ---
 - name: Initialize Kubernetes cluster and deploy Calico CNI
-  hosts: kubernetes-masters
+  hosts: kubernetes_masters
   become: true
   strategy: linear
   tasks:

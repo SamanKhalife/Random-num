@@ -1,6 +1,6 @@
 ---
 - name: Distribute join command file
-  hosts: kubernetes-workers
+  hosts: kubernetes_workers
   become: true
   tasks:
     - name: Copy join command file to worker nodes

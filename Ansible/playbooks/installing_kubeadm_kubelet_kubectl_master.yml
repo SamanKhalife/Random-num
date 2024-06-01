@@ -1,6 +1,6 @@
 ---
 - name: Install kubeadm kubelet kubectl
-  hosts: kubernetes-masters
+  hosts: kubernetes_masters
   become: true
   tasks:
     - name: Import Kubernetes GPG key
@@ -43,4 +43,3 @@
       retries: 3
       delay: 5
 ...
-

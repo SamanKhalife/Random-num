@@ -1,6 +1,6 @@
 ---
 - name: Generate and fetch kubeadm join command
-  hosts: kubernetes-masters[0]
+  hosts: kubernetes_masters[0]
   gather_facts: False
   tasks:
     - name: Execute kubeadm token create command

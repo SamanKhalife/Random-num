@@ -1,6 +1,6 @@
 ---
 - name: Helm-Deploy-Rabbitmq
-  hosts: kubernetes-masters[0]
+  hosts: kubernetes_masters[0]
   become: true
   strategy: linear
   tasks:
@@ -20,16 +20,3 @@
           helm install my-release bitnami/rabbitmq-cluster-operator
 
 ...
-
-
-
-
-
-
-
-
-
-
-
-
-

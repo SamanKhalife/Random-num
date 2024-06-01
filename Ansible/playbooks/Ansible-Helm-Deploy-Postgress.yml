@@ -1,6 +1,6 @@
 ---
 - name: Helm-Deploy-Postgress
-  hosts: kubernetes-masters[0]
+  hosts: kubernetes_masters[0]
   become: true
   strategy: linear
   tasks:
@@ -8,16 +8,3 @@
       ansible.builtin.shell: >
         helm install my-release oci://registry-1.docker.io/bitnamicharts/mariadb
 ...
-
-
-
-
-
-
-
-
-
-
-
-
-

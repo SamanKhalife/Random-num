@@ -1,6 +1,6 @@
 ---
 - name: Helm-Deploy-kube-prometheus-stack
-  hosts: kubernetes-masters[0]
+  hosts: kubernetes_masters[0]
   become: true
   strategy: linear
   tasks:
@@ -14,16 +14,3 @@
       ansible.builtin.shell: >
         helm install my-kube-prometheus-stack prometheus-community/kube-prometheus-stack --version 59.0.0
 ...
-
-
-
-
-
-
-
-
-
-
-
-
-

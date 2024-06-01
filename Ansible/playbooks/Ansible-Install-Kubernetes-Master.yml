@@ -27,18 +27,4 @@
 
     - name: fetching_new_kubeadm_join_command
       import_playbook: fetching_new_kubeadm_join_command.yml
-
 ...
-
-
-
-
-
-
-
-
-
-
-
-
-
