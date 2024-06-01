@@ -43,16 +43,3 @@
         name: systemd-resolved
         state: restarted
 ...
-
-
-
-
-
-
-
-
-
-
-
-
-
