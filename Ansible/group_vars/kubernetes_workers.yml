@@ -1,0 +1,6 @@
+---
+ansible_become: true 
+ansible_user: root
+ansible_port: 22
+ansible_shell_type: bash 
+...
