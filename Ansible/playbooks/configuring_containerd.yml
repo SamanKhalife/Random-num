@@ -1,9 +1,0 @@
----
-- name: Installing-Helm
-  hosts: all
-  become: true
-  roles:
-    - Ansible_Configure_Containerd
-...
-
-
