@@ -12,6 +12,6 @@ worker[1:2]
 
 
 [kubernetes_cluster:children]
-master
-workers
+kubernetes_masters
+kubernetes_workers
 
