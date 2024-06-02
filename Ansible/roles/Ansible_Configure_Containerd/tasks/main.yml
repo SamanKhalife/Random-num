@@ -1,10 +1,11 @@
 ---
-    - name: Force remove existing config.toml
-      command: rm -rf /etc/containerd/config.toml
-    # - name: Remove existing config.toml if present
-    #   ansible.builtin.file:
-    #     path: /etc/containerd/config.toml
-    #     state: absent
+    # - name: Force remove existing config.toml
+    #   command: rm -rf /etc/containerd/config.toml
+    
+    - name: Remove existing config.toml if present
+      ansible.builtin.file:
+        path: /etc/containerd/config.toml
+        state: absent
 
     - name: Copy containerd config file
       copy:
