@@ -40,17 +40,17 @@
       run_once: true
 
     - name: Deploy Calico custom resources
-      command.: kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.0/manifests/custom-resources.yaml
+      command: kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.0/manifests/custom-resources.yaml
       ignore_errors: true
       run_once: true
 
     - name: Wait for Kubernetes components to be ready
       pause:
-        minutes: 10
+        minutes: 7
 
-    - name: Save join command to file
-      command: kubeadm token create --print-join-command > /root/kubeadm_join_command.sh
-      when: kubeadm_init.changed
+    # - name: Save join command to file
+    #   command: kubeadm token create --print-join-command > /root/kubeadm_join_command.sh
+    #   when: kubeadm_init.changed
 ...
 
 
