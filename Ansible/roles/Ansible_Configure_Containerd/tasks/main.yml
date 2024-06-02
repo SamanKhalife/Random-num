@@ -6,7 +6,7 @@
 
     - name: Copy containerd config file
       copy:
-        src: etc/ansible/roles/Ansible_Configure_Containerd/files/config.toml
+        src: /etc/ansible/roles/Ansible_Configure_Containerd/files/config.toml
         dest: /etc/containerd/config.toml
 
     # - name: Create containerd directory
