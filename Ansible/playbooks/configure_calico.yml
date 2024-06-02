@@ -46,11 +46,11 @@
 
     - name: Wait for Kubernetes components to be ready
       pause:
-        minutes: 10
+        minutes: 7
 
-    - name: Save join command to file
-      command: kubeadm token create --print-join-command > /root/kubeadm_join_command.sh
-      when: kubeadm_init.changed
+    # - name: Save join command to file
+    #   command: kubeadm token create --print-join-command > /root/kubeadm_join_command.sh
+    #   when: kubeadm_init.changed
 ...
 
 
