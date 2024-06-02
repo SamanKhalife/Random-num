@@ -4,6 +4,10 @@
   become: true
   strategy: linear
   tasks:
+    
+    - name: Test connection with ping
+      ansible.builtin.ping:
+
     - name: Initialize Kubernetes cluster
       command: kubeadm init --pod-network-cidr=192.168.0.0/16
       args:
@@ -31,12 +35,12 @@
   #   shell: "chown $(id -u):$(id -g) $HOME/.kube/config"
 
     - name: Install Calico CNI
-      shell: kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.0/manifests/tigera-operator.yaml
+      command: kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.0/manifests/tigera-operator.yaml
       ignore_errors: true
       run_once: true
 
     - name: Deploy Calico custom resources
-      shell: kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.0/manifests/custom-resources.yaml
+      command.: kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.0/manifests/custom-resources.yaml
       ignore_errors: true
       run_once: true
 
@@ -45,7 +49,7 @@
         minutes: 10
 
     - name: Save join command to file
-      shell: kubeadm token create --print-join-command > /root/kubeadm_join_command.sh
+      command: kubeadm token create --print-join-command > /root/kubeadm_join_command.sh
       when: kubeadm_init.changed
 ...
 
