@@ -40,7 +40,7 @@
       run_once: true
 
     - name: Deploy Calico custom resources
-      command.: kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.0/manifests/custom-resources.yaml
+      command: kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.0/manifests/custom-resources.yaml
       ignore_errors: true
       run_once: true
 
