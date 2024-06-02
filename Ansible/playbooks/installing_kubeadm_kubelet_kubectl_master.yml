@@ -29,17 +29,17 @@
       retries: 3
       delay: 5
   
-    - name: Mark Kubernetes packages as held on master
-      apt:
-        name: "{{ item }}"
-        state: held
-      loop:
-        - kubelet
-        - kubeadm
-        - kubectl
-      tags: 
-        - kubernetes
-        - master
-      retries: 3
-      delay: 5
+    # - name: Mark Kubernetes packages as held on master
+    #   apt:
+    #     name: "{{ item }}"
+    #     state: held
+    #   loop:
+    #     - kubelet
+    #     - kubeadm
+    #     - kubectl
+    #   tags: 
+    #     - kubernetes
+    #     - master
+    #   retries: 3
+    #   delay: 5
 ...
