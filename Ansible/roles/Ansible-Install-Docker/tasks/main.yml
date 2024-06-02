@@ -1,86 +1,98 @@
 ---
-- name: Install prerequisite packages
-  become: true
-  ansible.builtin.apt:
-    name: "{{ packages }}"
-    state: present
-    update_cache: yes
-    cache_valid_time: 3600
+- name: Load OS-specific vars.
+  include_vars: "{{ lookup('first_found', params) }}"
   vars:
-    packages:
-      - apt-transport-https
-      - gpg
-      - gpg-agent
+    params:
+      files:
+        - '{{ansible_distribution}}.yml'
+        - '{{ansible_os_family}}.yml'
+        - main.yml
+      paths:
+        - 'vars'
 
-- name: Add Docker GPG apt key
-  become: true
-  ansible.builtin.apt_key:
-    url: https://download.docker.com/linux/ubuntu/gpg
-    state: present
-  retries: 3
-  delay: 30
-  register: result
-  until: result is succeeded
+- include_tasks: setup-RedHat.yml
+  when: ansible_os_family == 'RedHat'
 
-- name: Add Docker Repository
-  become: true
-  ansible.builtin.apt_repository:
-    repo: deb https://download.docker.com/linux/ubuntu {{ ansible_facts['lsb']['codename'] }} stable
-    state: present
-    update_cache: true
-  retries: 3
-  delay: 30
-  register: result
-  until: result is succeeded
+- include_tasks: setup-Debian.yml
+  when: ansible_os_family == 'Debian'
 
-- name: Create /etc/docker directory
-  become: true
-  ansible.builtin.file:
+- name: Install Docker packages.
+  package:
+    name: "{{ docker_packages }}"
+    state: "{{ docker_packages_state }}"
+  notify: restart docker
+  ignore_errors: "{{ ansible_check_mode }}"
+  when: "ansible_version.full is version_compare('2.12', '<') or ansible_os_family not in ['RedHat', 'Debian']"
+
+- name: Install Docker packages (with downgrade option).
+  package:
+    name: "{{ docker_packages }}"
+    state: "{{ docker_packages_state }}"
+    allow_downgrade: true
+  notify: restart docker
+  ignore_errors: "{{ ansible_check_mode }}"
+  when: "ansible_version.full is version_compare('2.12', '>=') and ansible_os_family in ['RedHat', 'Debian']"
+
+- name: Install docker-compose plugin.
+  package:
+    name: "{{ docker_compose_package }}"
+    state: "{{ docker_compose_package_state }}"
+  notify: restart docker
+  ignore_errors: "{{ ansible_check_mode }}"
+  when: "docker_install_compose_plugin | bool == true and (ansible_version.full is version_compare('2.12', '<') or ansible_os_family not in ['RedHat', 'Debian'])"
+
+- name: Install docker-compose-plugin (with downgrade option).
+  package:
+    name: "{{ docker_compose_package }}"
+    state: "{{ docker_compose_package_state }}"
+    allow_downgrade: true
+  notify: restart docker
+  ignore_errors: "{{ ansible_check_mode }}"
+  when: "docker_install_compose_plugin | bool == true and ansible_version.full is version_compare('2.12', '>=') and ansible_os_family in ['RedHat', 'Debian']"
+
+- name: Ensure /etc/docker/ directory exists.
+  file:
     path: /etc/docker
     state: directory
-    mode: "0755"
+    mode: 0755
+  when: docker_daemon_options.keys() | length > 0
 
-- name: Make docker use systemd to manage cgroups
-  become: true
-  ansible.builtin.copy:
-    src: files/daemon.json
+- name: Configure Docker daemon options.
+  copy:
+    content: "{{ docker_daemon_options | to_nice_json }}"
     dest: /etc/docker/daemon.json
-    mode: "0755"
+    mode: 0644
+  when: docker_daemon_options.keys() | length > 0
+  notify: restart docker
 
-- name: Update apt and Install docker-ce
-  become: true
-  ansible.builtin.apt:
-    name: "{{ item }}"
-    update_cache: true
-    cache_valid_time: 3600
-    state: present
-  retries: 3
-  delay: 10
-  register: result
-  until: result is succeeded
-  loop:
-    - docker-ce
-    - docker-ce-cli
-    - containerd.io
-
-- name: Add remote "{{ ansible_user }}" user to "docker" group
-  become: true
-  ansible.builtin.user:
-    name: "{{ ansible_user }}"
-    groups: docker
-    append: true
-  when: (ansible_user is defined) and (ansible_user|length > 0)
-
-- name: Start and Enable Docker
-  become: true
-  ansible.builtin.service:
+- name: Ensure Docker is started and enabled at boot.
+  service:
     name: docker
-    state: started
-    enabled: yes
+    state: "{{ docker_service_state }}"
+    enabled: "{{ docker_service_enabled }}"
+  ignore_errors: "{{ ansible_check_mode }}"
+  when: docker_service_manage | bool
 
-- name: Apply chmod on docker.sock
-  become: true
-  ansible.builtin.file:
-    path: /var/run/docker.sock
-    mode: a+x
-  notify: Restart Docker
+- name: Ensure handlers are notified now to avoid firewall conflicts.
+  meta: flush_handlers
+
+- include_tasks: docker-compose.yml
+  when: docker_install_compose | bool
+
+- name: Get docker group info using getent.
+  getent:
+    database: group
+    key: docker
+    split: ':'
+  when: docker_users | length > 0
+
+- name: Check if there are any users to add to the docker group.
+  set_fact:
+    at_least_one_user_to_modify: true
+  when:
+    - docker_users | length > 0
+    - item not in ansible_facts.getent_group["docker"][2]
+  with_items: "{{ docker_users }}"
+
+- include_tasks: docker-users.yml
+  when: at_least_one_user_to_modify is defined
