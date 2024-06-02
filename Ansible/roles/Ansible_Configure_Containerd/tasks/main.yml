@@ -34,14 +34,18 @@
     #     path: /etc/containerd/config.toml
     #     regexp: 'SystemdCgroup = false'
     #     replace: 'SystemdCgroup = true'
-
-
-    - name: Restart containerd service
-      systemd:
+   - name: Restart containerd service
+      service:
         name: containerd
-        daemon_reload: true
         state: restarted
-        enabled: true 
+        enabled: yes
+
+    # - name: Restart containerd service
+    #   systemd:
+    #     name: containerd
+    #     daemon_reload: true
+    #     state: restarted
+    #     enabled: true 
 ...
 
 
