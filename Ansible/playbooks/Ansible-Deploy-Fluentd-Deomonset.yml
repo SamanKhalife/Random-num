@@ -2,6 +2,6 @@
 - name: Deploy-Fluentd-Deomonset
   hosts: kubernetes_masters[0]
   become: true
-  strategy: linear
-  tasks:
+  roles:
+    - role: Ansible-Helm-Deploy-elasticsearch
 ...
