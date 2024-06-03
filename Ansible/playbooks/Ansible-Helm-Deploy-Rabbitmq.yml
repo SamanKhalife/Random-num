@@ -3,20 +3,6 @@
   hosts: kubernetes_masters[0]
   become: true
   strategy: linear
-  tasks:
-    - name: Add repository
-      ansible.builtin.shell: helm repo add bitnami https://charts.bitnami.com/bitnami
-
-    - name: Update repo cache
-      ansible.builtin.shell: helm repo update
-
-    # - name: Copy values file
-    #   ansible.builtin.copy:
-    #     src: "ingress-nginx.yml"
-    #     dest: "/tmp/ingress-nginx.yml"
-
-    - name: Install
-      ansible.builtin.shell: >
-          helm install my-release bitnami/rabbitmq-cluster-operator
-
+  roles:
+    - role: Ansible-Helm-Deploy-Nginx-Ingress
 ...
