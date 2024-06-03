@@ -1,10 +1,18 @@
 ---
+
 - name: Configure Containerd
   hosts: all
   become: yes
   tasks:
     - name: Force remove existing config.toml
       shell: rm -f /etc/containerd/config.toml
+    # - name: Force remove existing config.toml
+    #   command: rm -rf /etc/containerd/config.toml
+
+    - name: Remove existing config.toml if present
+      ansible.builtin.file:
+        path: /etc/containerd/config.toml
+        state: absent
 
     - name: Copy new config.toml
       copy:
@@ -27,11 +35,24 @@
             enabled: yes
           when: ansible_failed_task is defined and ansible_failed_task.name == "Restart containerd service using systemd"
 
-    - name: Ensure containerd service is running and enabled
+    # - name: Modify Containerd configuration
+    #   replace:
+    #     path: /etc/containerd/config.toml
+    #     regexp: 'SystemdCgroup = false'
+    #     replace: 'SystemdCgroup = true'
+   - name: Restart containerd service
       service:
         name: containerd
-        state: started
+        state: restarted
         enabled: yes
+
+    # - name: Restart containerd service
+    #   systemd:
+    #     name: containerd
+    #     daemon_reload: true
+    #     state: restarted
+    #     enabled: true 
+
 ...
 
 
