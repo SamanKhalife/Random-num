@@ -1,10 +1,7 @@
 ---
-- name: Helm-Deploy-Postgress
+- name: Helm-Deploy-Nginx-Ingress
   hosts: kubernetes_masters[0]
   become: true
-  strategy: linear
-  tasks:
-    - name: Install
-      ansible.builtin.shell: >
-        helm install my-release oci://registry-1.docker.io/bitnamicharts/mariadb
+  roles:
+    - role: Ansible-Helm-Deploy-Nginx-Ingress
 ...
