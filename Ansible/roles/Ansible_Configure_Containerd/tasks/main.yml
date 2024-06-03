@@ -1,45 +1,37 @@
 ---
-    - name: Remove existing config.toml if present
-      ansible.builtin.file:
-        path: /etc/containerd/config.toml
-        state: absent
+- name: Configure Containerd
+  hosts: all
+  become: yes
+  tasks:
+    - name: Force remove existing config.toml
+      shell: rm -f /etc/containerd/config.toml
 
-    - name: Copy containerd config file
+    - name: Copy new config.toml
       copy:
         src: /etc/ansible/roles/Ansible_Configure_Containerd/files/config.toml
         dest: /etc/containerd/config.toml
 
-    # - name: Create containerd directory
-    #   ansible.builtin.file: 
-    #     name: /etc/containerd
-    #     state: directory
+    - block:
+        - name: Restart containerd service using systemd
+          systemd:
+            name: containerd
+            daemon_reload: true
+            state: restarted
+            enabled: true
+          ignore_errors: yes
 
-    # - name: Render containerd default config
-    #   ansible.builtin.shell: containerd config default > /etc/containerd/config.toml
-    #   force: yes
-    
-    # - name: Check if config.toml is updated
-    #   ansible.builtin.lineinfile:
-    #     path: /etc/containerd/config.toml
-    #     regexp: '^#[grpc]'
-    #     state: absent
-    #   check_mode: true
-    #   changed_when: false
-    #   register: containerd_config
+        - name: Restart containerd service using service module
+          service:
+            name: containerd
+            state: restarted
+            enabled: yes
+          when: ansible_failed_task is defined and ansible_failed_task.name == "Restart containerd service using systemd"
 
-    # - name: Modify Containerd configuration
-    #   replace:
-    #     path: /etc/containerd/config.toml
-    #     regexp: 'SystemdCgroup = false'
-    #     replace: 'SystemdCgroup = true'
-
-
-    - name: Restart containerd service
-      systemd:
+    - name: Ensure containerd service is running and enabled
+      service:
         name: containerd
-        daemon_reload: true
-        state: restarted
-        enabled: true 
+        state: started
+        enabled: yes
 ...
 
 
