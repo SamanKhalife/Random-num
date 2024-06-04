@@ -1,0 +1,18 @@
+krew_arch: linux_amd64
+krew_tarball_url: "https://github.com/kubernetes-sigs/krew/releases/latest/download/krew-{{ krew_arch }}.tar.gz"
+krew_archive_dir: /tmp/krew
+krew_plugins:
+  - "ingress-nginx"
+  - "access-matrix"
+  - "who-can"
+  - "cert-manager"
+  - "ctx"
+  - "deprecations"
+  - "flyte"
+  - "neat"
+  - "node-shell"
+  - "ns"
+  - "popeye"
+  - "score"
+  - "trace"
+  - "tree"
