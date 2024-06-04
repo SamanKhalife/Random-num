@@ -1,0 +1,21 @@
+---
+- name: Update apt cache and install required packages
+  hosts: all
+  become: true
+  tasks:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+
+    - name: Install required packages
+      ansible.builtin.apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gpg
+          - software-properties-common
+        state: present
+        update_cache: true
+      tags: apt
+...
