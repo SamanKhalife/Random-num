@@ -1,11 +1,12 @@
 ---
+- name: Set DNS servers in /etc/resolv.conf
+  hosts: all
+  become: true
+  tasks:
+    - role: Ansible-Change-Dns
 
 
 
-
-# - name: Set DNS servers in /etc/resolv.conf
-#   hosts: all
-#   become: true
 #   vars:
 #     dns_servers:
 #       - "8.8.8.8"
