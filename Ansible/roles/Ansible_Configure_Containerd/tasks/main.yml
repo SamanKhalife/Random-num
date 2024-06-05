@@ -1,14 +1,4 @@
 ---
-
-- name: Configure Containerd
-  hosts: all
-  become: yes
-  tasks:
-    - name: Force remove existing config.toml
-      shell: rm -f /etc/containerd/config.toml
-    # - name: Force remove existing config.toml
-    #   command: rm -rf /etc/containerd/config.toml
-
     - name: Remove existing config.toml if present
       ansible.builtin.file:
         path: /etc/containerd/config.toml
@@ -16,43 +6,28 @@
 
     - name: Copy new config.toml
       copy:
-        src: /etc/ansible/roles/Ansible_Configure_Containerd/files/config.toml
+        src: files/config.toml
         dest: /etc/containerd/config.toml
 
-    - block:
-        - name: Restart containerd service using systemd
-          systemd:
-            name: containerd
-            daemon_reload: true
-            state: restarted
-            enabled: true
-          ignore_errors: yes
+    - name: Restart containerd service using systemd
+      systemd:
+        name: containerd
+        daemon_reload: true
+        state: restarted
+        enabled: true
+      ignore_errors: true
 
-        - name: Restart containerd service using service module
-          service:
-            name: containerd
-            state: restarted
-            enabled: yes
-          when: ansible_failed_task is defined and ansible_failed_task.name == "Restart containerd service using systemd"
-
-    # - name: Modify Containerd configuration
-    #   replace:
-    #     path: /etc/containerd/config.toml
-    #     regexp: 'SystemdCgroup = false'
-    #     replace: 'SystemdCgroup = true'
-   - name: Restart containerd service
+    - name: Restart containerd service using service module
       service:
         name: containerd
         state: restarted
-        enabled: yes
+        enabled: true
 
-    # - name: Restart containerd service
-    #   systemd:
-    #     name: containerd
-    #     daemon_reload: true
-    #     state: restarted
-    #     enabled: true 
-
+    - name: Restart containerd service
+      service:
+        name: containerd
+        state: restarted
+        enabled: true
 ...
 
 
