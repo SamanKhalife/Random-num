@@ -3,5 +3,5 @@
   hosts: kubernetes_masters[0]
   become: true
   roles:
-    - role: Ansible-Helm-Deploy-Nginx-Ingress
+    - role: ansible-helm-deploy-nginx-ingress
 ...
