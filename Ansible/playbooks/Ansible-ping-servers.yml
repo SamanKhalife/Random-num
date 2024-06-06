@@ -4,5 +4,5 @@
   become: true
   tasks:
     - name: Check connection
-      ping:
+      ansible.builtin.ping:
 ...
