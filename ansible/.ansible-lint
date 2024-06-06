@@ -1,0 +1,27 @@
+---
+parseable: true
+
+profile: safety # min, basic, moderate, safety, shared, production
+
+loop_var_prefix: "^(__|{role}_)"
+
+var_naming_pattern: "^[a-z_][a-z0-9_]*$"
+
+use_default_rules: true
+
+write_list: ["all"]
+
+offline: true
+
+kinds:
+  - playbook: "**/examples/*.{yml,yaml}"
+  - galaxy: "**/folder/galaxy.yml"
+  - tasks: "**/tasks/*.{yml,yaml}"
+  - vars: "**/vars/*.{yml,yaml}"
+  - meta: "**/meta/main.yml"
+  - yaml: "**/*.yaml"
+
+warn_list:
+  - internal-error
+
+max_block_depth: 20

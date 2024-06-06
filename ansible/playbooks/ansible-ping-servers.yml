@@ -1,0 +1,8 @@
+---
+- name: Example Playbook
+  hosts: all
+  become: true
+  tasks:
+    - name: Check connection
+      ansible.builtin.ping:
+...

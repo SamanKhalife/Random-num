@@ -1,0 +1,31 @@
+---
+    - name: Remove existing config.toml if present
+      ansible.builtin.file:
+        path: /etc/containerd/config.toml
+        state: absent
+
+    - name: Copy new config.toml
+      copy:
+        src: files/config.toml
+        dest: /etc/containerd/config.toml
+
+    - name: Restart containerd service using systemd
+      systemd:
+        name: containerd
+        daemon_reload: true
+        state: restarted
+        enabled: true
+      ignore_errors: true
+
+    - name: Restart containerd service using service module
+      service:
+        name: containerd
+        state: restarted
+        enabled: true
+
+    - name: Restart containerd service
+      service:
+        name: containerd
+        state: restarted
+        enabled: true
+...

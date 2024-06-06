@@ -1,0 +1,17 @@
+[all]
+master1
+worker1
+worker2
+
+
+[kubernetes_masters]
+master1
+
+[kubernetes_workers]
+worker[1:2]
+
+
+[kubernetes_cluster:children]
+kubernetes_masters
+kubernetes_workers
+

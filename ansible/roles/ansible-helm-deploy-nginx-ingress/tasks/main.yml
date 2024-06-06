@@ -1,0 +1,27 @@
+---
+- name: Add repository
+  ansible.builtin.shell: helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+
+- name: Update repo cache
+  ansible.builtin.shell: helm repo update
+
+- name: Create namespace
+  ansible.builtin.shell: |
+    set -o pipefail && kubectl create namespace ingress-nginx --dry-run=client -o yaml | kubectl apply -f -
+
+- name: Copy values file
+  ansible.builtin.copy:
+    src: "ingress-nginx.yml"
+    dest: "/tmp/ingress-nginx.yml"
+
+- name: Install
+  ansible.builtin.shell: >
+    helm install myingress
+    ingress-nginx/ingress-nginx
+    -n ingress-nginx
+    --values /tmp/ingress-nginx.yml
+
+- name: Patch validatingwebhookconfigurations
+  ansible.builtin.shell: |
+    CA=$(kubectl -n ingress-nginx get secret myingress-ingress-nginx-admission -ojsonpath='{.data.ca}')
+    kubectl patch validatingwebhookconfigurations myingress-ingress-nginx-admission --type='json' -p='[{"op": "add", "path": "/webhooks/0/clientConfig/caBundle", "value":"'$CA'"}]'

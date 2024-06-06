@@ -1,0 +1,16 @@
+---
+    - name: Remove existing /etc/resolv.conf
+      file:
+        path: /etc/resolv.conf
+        state: absent
+
+    - name: Copy new resolv.conf to the host
+      copy:
+        src: files/etc/resolv.conf
+        dest: /etc/resolv.conf
+        owner: root
+        group: root
+        mode: '0644'
+      notify:
+        - Restart systemd-resolved
+...
