@@ -1,19 +1,19 @@
  # testing play book one by one
 
 ```
- ansible-playbook Ansible-ping-servers.yml
+ ansible-playbook ansible-ping-servers.yml
 ```
 ```
- ansible-playbook Ansible-Change-Dns.yml
+ ansible-playbook ansible-change-dns.yml
 ```
 ```
- ansible-playbook Ansible-Disabling-swap.yml
+ ansible-playbook ansible-disabling-swap.yml
 ```
 ```
- ansible-playbook Ansible-Install-Docker.yml
+ ansible-playbook ansible-Install-docker.yml
 ```
 ```
- ansible-playbook Ansible_Configuring_Containerd.yml
+ ansible-playbook ansible-configuring-containerd.yml
 ```
 ```
  ansible-playbook installing_k8s_dependencies.yml
@@ -25,7 +25,7 @@
  ansible-playbook configure_calico.yml
 ```
 ```
- ansible-playbook Ansible-Install-Helm.yml
+ ansible-playbook ansible-Install-helm.yml
 ```
 ```
  ansible-playbook fetching_new_kubeadm_join_command.yml
@@ -34,32 +34,35 @@
  ansible-playbook installing_kubelet_worker.yml
 ```
 ```
- ansible-playbook Worker_Join_Cluster.yml
+ ansible-playbook worker-join-cluster.yml
 ```
 ```
- ansible-playbook Ansible-Helm-Deploy-Haproxy.yml
+ ansible-playbook ansible-helm-deploy-haproxy.yml
 ```
 ```
- ansible-playbook Ansible-Helm-Deploy-Nginx-Ingress.yml
+ ansible-playbook ansible-helm-deploy-nginx-Ingress.yml
 ```
 ```
- ansible-playbook Ansible-Helm-Deploy-Postgress.yml
+ ansible-playbook ansible-helm-deploy-postgress.yml
 ```
 ```
- ansible-playbook Ansible-Helm-Deploy-Rabbitmq.yml
+ ansible-playbook ansible-helm-deploy-rabbitmq.yml
 ```
 ```
- ansible-playbook Ansible-Helm-Deploy-elasticsearch.yml
+ ansible-playbook ansible-helm-deploy-elasticsearch.yml
 ```
 ```
  ansible-playbook Ansible-Deploy-Fluentd-Deomonset.yml
 ```
 ```
- ansible-playbook Ansible-Helm-Deploy-kube-prometheus-stack.yml
+ ansible-playbook ansible-deploy-fluentd-deomonset.yml
 ```
 ```
- ansible-playbook deploy_kubernetes_dashboard.yml
+ ansible-playbook deploy-kubernetes-dashboard.yml
 ```
+
+
+## or all in one seprate for master and worker nodes
 ```
 ansible-playbook Ansible-Install-Kubernetes-Master.yml
 ```
