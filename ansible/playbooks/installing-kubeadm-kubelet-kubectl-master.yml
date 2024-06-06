@@ -45,31 +45,3 @@
       delay: 5
 ...
 
-
-
-
-
-
----
-    - name: Ensure /etc/apt/keyrings directory exists
-      become: yes
-      file:
-        path: /etc/apt/keyrings
-        state: directory
-        mode: '0755'
-
-    - name: Download Kubernetes GPG key
-      become: yes
-      shell: curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key -o /tmp/Release.key
-
-    - name: Convert and save Kubernetes GPG key
-      become: yes
-      shell: gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg /tmp/Release.key
-      args:
-        creates: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-
-    - name: Remove temporary GPG key file
-      become: yes
-      file:
-        path: /tmp/Release.key
-        state: absent
