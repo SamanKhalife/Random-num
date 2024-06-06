@@ -23,7 +23,7 @@
         state: absent
 
     - name: Add Kubernetes apt repository
-      ansible.builtin.command: echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+      ansible.builtin.command: bash -c "echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list"
       changed_when: false
 
     - name: Update apt cache
@@ -42,6 +42,6 @@
         - kubernetes
         - master
       retries: 3
-      delay: 5
+      delay: 4
 ...
 
