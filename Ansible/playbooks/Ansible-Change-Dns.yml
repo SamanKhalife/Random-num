@@ -3,5 +3,5 @@
   hosts: all
   become: true
   tasks:
-    - role: Ansible-Change-Dns
+    - role: ansible-change-dns
 ...
