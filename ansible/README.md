@@ -19,19 +19,19 @@
  ansible-playbook installing-k8s-dependencies.yml
 ```
 ```
- ansible-playbook installing_kubeadm_kubelet_kubectl_master.yml
+ ansible-playbook installing-kubeadm-kubelet-kubectl-master.yml
 ```
 ```
- ansible-playbook configure_calico.yml
+ ansible-playbook configure-calico.yml
 ```
 ```
  ansible-playbook ansible-Install-helm.yml
 ```
 ```
- ansible-playbook fetching_new_kubeadm_join_command.yml
+ ansible-playbook fetching-new-kubeadm-join-command.yml
 ```
 ```
- ansible-playbook installing_kubelet_worker.yml
+ ansible-playbook installing-kubelet-worker.yml
 ```
 ```
  ansible-playbook worker-join-cluster.yml
