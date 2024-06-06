@@ -16,7 +16,7 @@
  ansible-playbook ansible-configuring-containerd.yml
 ```
 ```
- ansible-playbook installing_k8s_dependencies.yml
+ ansible-playbook installing-k8s-dependencies.yml
 ```
 ```
  ansible-playbook installing_kubeadm_kubelet_kubectl_master.yml
