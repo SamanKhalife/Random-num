@@ -12,6 +12,11 @@
       ansible.builtin.command: kubeadm init --pod-network-cidr=192.168.0.0/16
       args:
         creates: /etc/kubernetes/admin.conf
+      register: kubeadm_output
+    
+    - name: Display kubeadm init output
+      ansible.builtin.debug:
+        var: kubeadm_output.stdout
 
     - name: Create .kube directory
       file:
