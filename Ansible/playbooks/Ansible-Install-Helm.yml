@@ -3,5 +3,5 @@
   hosts: kubernetes_masters[0]
   become: true
   roles:
-    - Ansible-Install-Helm
+    - ansible-Install-helm
 ...
