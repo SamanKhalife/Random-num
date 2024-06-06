@@ -6,7 +6,7 @@
 
     - name: Copy new resolv.conf to the host
       copy:
-        src: files/etc/resolv.conf
+        src: files/resolv.conf
         dest: /etc/resolv.conf
         owner: root
         group: root
