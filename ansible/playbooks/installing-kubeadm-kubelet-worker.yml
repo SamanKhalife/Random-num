@@ -1,0 +1,43 @@
+---
+- name: Install Kubernetes and configure containerd on workers nodes
+  hosts: kubernetes_workers
+  become: true
+  tasks:
+    - name: Ensure /etc/apt/keyrings directory exists
+      file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: '0755'
+
+    - name: Download Kubernetes GPG key
+      ansible.builtin.command: curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key -o /tmp/Release.key
+
+    - name: Convert and save Kubernetes GPG key
+      ansible.builtin.command: gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg /tmp/Release.key
+      args:
+        creates: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+
+    - name: Remove temporary GPG key file
+      file:
+        path: /tmp/Release.key
+        state: absent
+
+    - name: Add Kubernetes apt repository
+      ansible.builtin.command: bash -c "echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list"
+      changed_when: false
+
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+
+    - name: Install Kubernetes packages on master
+      ansible.builtin.apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - kubelet
+        - kubeadm
+
+      retries: 3
+      delay: 4
+...
