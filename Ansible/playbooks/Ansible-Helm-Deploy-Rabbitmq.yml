@@ -4,5 +4,5 @@
   become: true
   strategy: linear
   roles:
-    - role: Ansible-Helm-Deploy-Nginx-Ingress
+    - role: ansible-helm-deploy-rabbitmq
 ...
