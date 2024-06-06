@@ -3,5 +3,5 @@
   hosts: kubernetes_masters[0]
   become: true
   roles:
-    - role: Ansible-Helm-Deploy-Haproxy
+    - role: ansible-helm-deploy-haproxy
 ...
