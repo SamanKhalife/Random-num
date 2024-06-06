@@ -17,15 +17,14 @@
         enabled: true
       ignore_errors: true
 
-    - name: Restart containerd service using service module
-      service:
-        name: containerd
-        state: restarted
-        enabled: true
+    # - name: Restart containerd service using service module
+    #   service:
+    #     name: containerd
+    #     state: restarted
+    #     enabled: true
 
-    - name: Restart containerd service
-      service:
-        name: containerd
-        state: restarted
-        enabled: true
-...
+    # - name: Restart containerd service
+    #   service:
+    #     name: containerd
+    #     state: restarted
+    #     enabled: true
