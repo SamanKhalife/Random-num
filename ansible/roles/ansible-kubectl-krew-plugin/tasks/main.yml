@@ -1,0 +1,72 @@
+---
+- name: ensure krew archive dir exists
+  file:
+    path: "{{ krew_archive_dir }}"
+    state: directory
+
+- name: remove krew archive dir to trigger update
+  file:
+    path: "{{ krew_archive_dir }}/krew-{{ krew_arch }}"
+    state: absent
+  when: krew_update | default(False) | bool
+
+- name: unpack krew tarball
+  unarchive:
+    src: "{{ krew_tarball_url }}"
+    dest: "{{ krew_archive_dir }}"
+    remote_src: yes
+    creates: "{{ krew_archive_dir }}/krew-{{ krew_arch }}"
+
+- name: run krew install krew
+  command: "{{ krew_archive_dir }}/krew-{{ krew_arch }} install krew"
+
+- name: install krew path in global profile
+  template:
+    src: krew-path.sh
+    dest: /etc/profile.d/krew-path.sh
+  become: True
+
+- name: Install Krew plugins
+  shell: "kubectl krew install {{ item }}"
+  with_items: "{{ krew_plugins }}"
+  when: krew_plugins is defined
+
+
+# chatgpt
+# - name: Create temporary directory
+#   tempfile:
+#     state: directory
+#   register: temp_dir
+
+# - name: Determine OS and architecture
+#   set_fact:
+#     os: "{{ ansible_system | lower }}"
+#     arch: >
+#       {% if ansible_architecture == 'x86_64' %}
+#       amd64
+#       {% elif ansible_architecture == 'aarch64' %}
+#       arm64
+#       {% elif ansible_architecture == 'armv7l' %}
+#       arm
+#       {% endif %}
+
+# - name: Set Krew binary name
+#   set_fact:
+#     krew: "krew-{{ os }}_{{ arch }}"
+
+# - name: Download Krew tarball
+#   get_url:
+#     url: "https://github.com/kubernetes-sigs/krew/releases/latest/download/{{ krew }}.tar.gz"
+#     dest: "{{ temp_dir.path }}/{{ krew }}.tar.gz"
+
+# - name: Extract Krew tarball
+#   unarchive:
+#     src: "{{ temp_dir.path }}/{{ krew }}.tar.gz"
+#     dest: "{{ temp_dir.path }}"
+#     remote_src: yes
+
+# - name: Install Krew
+#   command: "./{{ krew }} install krew"
+#   args:
+#     chdir: "{{ temp_dir.path }}"
+...

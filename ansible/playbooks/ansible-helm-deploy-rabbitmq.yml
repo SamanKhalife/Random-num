@@ -1,0 +1,8 @@
+---
+- name: Helm-Deploy-Rabbitmq
+  hosts: kubernetes_masters[0]
+  become: true
+  strategy: linear
+  roles:
+    - role: ansible-helm-deploy-rabbitmq
+...

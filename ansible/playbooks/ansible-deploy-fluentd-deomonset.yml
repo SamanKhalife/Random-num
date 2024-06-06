@@ -1,0 +1,7 @@
+---
+- name: Deploy-Fluentd-Deomonset
+  hosts: kubernetes_masters[0]
+  become: true
+  roles:
+    - role: ansible-deploy-fluentd-deomonset
+...

@@ -1,0 +1,31 @@
+---
+- name: Install kubeadm kubelet kubectl
+  hosts: kubernetes_masters
+  become: true
+  tasks:
+    - name: Import Kubernetes GPG key
+      ansible.builtin.command: curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+      changed_when: false
+
+    - name: Add Kubernetes apt repository
+      ansible.builtin.command: echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+      changed_when: false
+
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+
+    - name: Install Kubernetes packages on master
+      ansible.builtin.apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - kubelet
+        - kubeadm
+        - kubectl
+      tags:
+        - kubernetes
+        - master
+      retries: 3
+      delay: 5
+...
