@@ -2,6 +2,7 @@
 - name: Install-Kubernetes-Master
   gather_facts: False
   strategy: linear
+  become: true 
   tasks:
     - name: changing-dns-servers
       import_playbook: Ansible-Change-Dns.yml
