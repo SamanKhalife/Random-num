@@ -9,7 +9,7 @@
       ansible.builtin.ping:
 
     - name: Initialize Kubernetes cluster
-      command: kubeadm init --pod-network-cidr=192.168.0.0/16
+      ansible.builtin.command: kubeadm init --pod-network-cidr=192.168.0.0/16
       args:
         creates: /etc/kubernetes/admin.conf
 
