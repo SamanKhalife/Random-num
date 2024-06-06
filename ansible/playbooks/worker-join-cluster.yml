@@ -5,10 +5,12 @@
   tasks:
     - name: Copy join command file to worker nodes
       copy:
-        src: /random-num/ansible/roles/fetching_new_kubeadm_join_command/files/root/kubeadm_join_command.sh
+        src: /root/kubeadm_join_command.sh
         dest: /root/kubeadm_join_command.sh
         mode: '0755'
 
     - name: Join worker nodes to the cluster
-      shell: /root/kubeadm_join_command.sh
+      ansible.builtin.command: /root/kubeadm_join_command.sh && touch /root/.kubeadm_join_done
+      args:
+        creates: /root/.kubeadm_join_done
 ...
