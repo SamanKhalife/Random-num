@@ -4,32 +4,32 @@
   become: true
   tasks:
     - name: Import Kubernetes GPG key
-      shell: curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+      ansible.builtin.command: curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
       changed_when: false
       tags:
         - worker
 
     - name: Add Kubernetes apt repository
-      shell: echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+      ansible.builtin.command: echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
       changed_when: false
       tags:
         - worker
 
     - name: Update apt cache
-      apt:
+      ansible.builtin.apt:
         update_cache: yes
       tags:
         - worker
 
     - name: Install Kubernetes package on worker
-      apt:
+      ansible.builtin.apt:
         name: kubelet
         state: present
       tags:
         - worker
 
     - name: Mark kubelet package as held on worker
-      apt:
+      ansible.builtin.apt:
         name: kubelet
         state: held
       tags:
