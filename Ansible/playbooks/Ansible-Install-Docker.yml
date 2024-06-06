@@ -3,5 +3,5 @@
   hosts: all
   become: true
   roles:
-    - Ansible-Install-Docker
+    - ansible-Install-docker
 ...
