@@ -21,4 +21,7 @@ kinds:
   - meta: "**/meta/main.yml"
   - yaml: "**/*.yaml"
 
+warn_list:
+  - internal-error
+
 max_block_depth: 20
