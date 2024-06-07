@@ -5,9 +5,13 @@
         state: absent
 
     - name: Copy new config.toml
+      become: yes
       copy:
         src: files/config.toml
         dest: /etc/containerd/config.toml
+        owner: root
+        group: root
+        mode: '0644'
 
     - name: Restart containerd service using systemd
       systemd:
