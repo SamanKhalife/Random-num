@@ -5,7 +5,7 @@
         state: absent
 
     - name: Copy new config.toml
-      become: yes
+      become: true
       copy:
         src: files/config.toml
         dest: /etc/containerd/config.toml
