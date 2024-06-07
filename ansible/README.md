@@ -28,6 +28,9 @@
  ansible-playbook ansible-Install-helm.yml
 ```
 ```
+ ansible-playbook ansible-kubectl-krew-plugin.yml
+```
+```
  ansible-playbook fetching-new-kubeadm-join-command.yml
 ```
 ```
