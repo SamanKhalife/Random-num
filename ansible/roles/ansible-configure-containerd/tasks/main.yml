@@ -1,34 +1,26 @@
 ---
-    - name: Remove existing config.toml if present
-      ansible.builtin.file:
-        path: /etc/containerd/config.toml
-        state: absent
+- name: Install containerd.io
+  apt:
+    name: containerd.io
+    state: present
+    update_cache: yes
 
-    - name: Copy new config.toml
-      become: true
-      copy:
-        src: files/config.toml
-        dest: /etc/containerd/config.toml
-        owner: root
-        group: root
-        mode: '0644'
+- name: Run containerd config command and save output to file
+  command: containerd config default
+  register: containerd_config_output
 
-    - name: Restart containerd service using systemd
-      systemd:
-        name: containerd
-        daemon_reload: true
-        state: restarted
-        enabled: true
-      ignore_errors: true
+- name: Write containerd config output to file
+  copy:
+    content: "{{ containerd_config_output.stdout }}"
+    dest: /etc/containerd/config.toml
+    force: yes
+    backup: yes
 
-    # - name: Restart containerd service using service module
-    #   service:
-    #     name: containerd
-    #     state: restarted
-    #     enabled: true
-
-    # - name: Restart containerd service
-    #   service:
-    #     name: containerd
-    #     state: restarted
-    #     enabled: true
+- name: Modify Containerd configuration
+  replace:
+    path: /etc/containerd/config.toml
+    regexp: 'SystemdCgroup = false'
+    replace: 'SystemdCgroup = true'
+  notify:
+    - Reload systemd daemon
+    - Restart containerd service
