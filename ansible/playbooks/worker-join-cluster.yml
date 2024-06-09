@@ -10,7 +10,7 @@
         mode: '0755'
 
     - name: Join worker nodes to the cluster
-      ansible.builtin.command: /root/kubeadm_join_command.sh && touch /root/.kubeadm_join_done
+      ansible.builtin.command: bash /root/kubeadm_join_command.sh && touch /root/.kubeadm_join_done
       args:
         creates: /root/.kubeadm_join_done
 ...

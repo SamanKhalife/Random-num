@@ -27,18 +27,21 @@
 ```
  ansible-playbook ansible-Install-helm.yml
 ```
-ta inja oke 
-```
- ansible-playbook ansible-kubectl-krew-plugin.yml
-```
 ```
  ansible-playbook fetching-new-kubeadm-join-command.yml
 ```
 ```
- ansible-playbook installing-kubelet-worker.yml
+ ansible-playbook installing-kubeadm-kubelet-worker.yml
 ```
 ```
  ansible-playbook worker-join-cluster.yml
+```
+ta inja oke 
+```
+ ansible-playbook deploy-kubernetes-dashboard.yml
+```
+```
+ ansible-playbook ansible-deploy-fluentd-deomonset.yml
 ```
 ```
  ansible-playbook ansible-helm-deploy-haproxy.yml
@@ -55,15 +58,7 @@ ta inja oke
 ```
  ansible-playbook ansible-helm-deploy-elasticsearch.yml
 ```
-```
- ansible-playbook Ansible-Deploy-Fluentd-Deomonset.yml
-```
-```
- ansible-playbook ansible-deploy-fluentd-deomonset.yml
-```
-```
- ansible-playbook deploy-kubernetes-dashboard.yml
-```
+
 
 
 ## or all in one seprate for master and worker nodes
@@ -75,7 +70,13 @@ ansible-playbook Ansible-Install-Kubernetes-Worker.yml
 ```
 
 
-
+WARNING: You installed plugins from the krew-index plugin repository.
+   These plugins are not audited for security by the Krew maintainers.
+   Run them at your own risk. 
+dont deploy this 
+```
+ ansible-playbook ansible-kubectl-krew-plugin.yml
+```
 
 
 
