@@ -31,7 +31,7 @@
  ansible-playbook fetching-new-kubeadm-join-command.yml
 ```
 ```
- ansible-playbook installing-kubelet-worker.yml
+ ansible-playbook installing-kubeadm-kubelet-worker.yml
 ```
 
 ta inja oke 
