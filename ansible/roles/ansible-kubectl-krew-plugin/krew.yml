@@ -1,0 +1,72 @@
+---
+- name: Installing-krew
+  hosts: kubernetes_masters[0]
+  become: true
+  tasks:
+    - name: Ensure /root/krew directory exists
+      ansible.builtin.file:
+        path: /root/krew
+        state: directory
+
+    - name: Download krew-linux_amd64(Gets tarball)
+      become: True
+      ansible.builtin.get_url:
+        url: "https://github.com/kubernetes-sigs/krew/releases/download/v0.4.4/krew-linux_amd64.tar.gz"
+        dest: /root/krew/krew-linux_amd64.tar.gz
+        mode: '0440'
+
+
+    - name: Extract krew-linux_amd64.tar.gz into /root/krew (Unarchive source)
+      become: True
+      ansible.builtin.unarchive:
+        src: /root/krew/krew-linux_amd64.tar.gz
+        dest: /root/krew
+
+
+    - name: install krew path in global profile
+      template:
+        src: krew-path.sh
+        dest: /etc/profile.d/krew-path.sh
+      become: True
+      owner: root
+      group: root
+      mode: '0755'
+
+
+    - name: Install Krew
+      command: "/root/krew/krew-linux_amd64 install krew"
+      environment:
+        PATH: "/root/krew:${PATH}"
+
+    - name: Add Krew binary to PATH
+      lineinfile:
+        path: /etc/profile.d/krew-path.sh
+        line: 'export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"'
+        create: True
+
+    - name: Install Krew plugins
+      shell: "kubectl krew install {{ item }}"
+      with_items:
+        # - "access-matrix"
+        # - "who-can"
+        # - "cert-manager"
+        - "ctx"
+        # - "deprecations"
+        # - "flyte"
+        # - "neat"
+        # - "node-shell"
+        # - "ns"
+        # - "popeye"
+        # - "score"
+        # - "trace"
+        # - "tree"
+
+# https://github.com/kubernetes-sigs/krew/releases/download/v0.4.4/krew-linux_amd64.tar.gz
+
+# tar zxvf krew-linux_amd64.tar.gz
+
+# ./krew-linux_amd64 install krew
+
+# export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+
+...
