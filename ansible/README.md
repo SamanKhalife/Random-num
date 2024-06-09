@@ -27,13 +27,15 @@
 ```
  ansible-playbook ansible-Install-helm.yml
 ```
-
 ```
  ansible-playbook fetching-new-kubeadm-join-command.yml
 ```
 ```
  ansible-playbook installing-kubelet-worker.yml
 ```
+
+ta inja oke 
+
 ```
  ansible-playbook worker-join-cluster.yml
 ```
