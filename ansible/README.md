@@ -27,10 +27,7 @@
 ```
  ansible-playbook ansible-Install-helm.yml
 ```
-ta inja oke 
-```
- ansible-playbook ansible-kubectl-krew-plugin.yml
-```
+
 ```
  ansible-playbook fetching-new-kubeadm-join-command.yml
 ```
@@ -75,7 +72,13 @@ ansible-playbook Ansible-Install-Kubernetes-Worker.yml
 ```
 
 
-
+WARNING: You installed plugins from the krew-index plugin repository.
+   These plugins are not audited for security by the Krew maintainers.
+   Run them at your own risk. 
+dont deploy this 
+```
+ ansible-playbook ansible-kubectl-krew-plugin.yml
+```
 
 
 
