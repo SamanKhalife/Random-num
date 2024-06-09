@@ -33,11 +33,15 @@
 ```
  ansible-playbook installing-kubeadm-kubelet-worker.yml
 ```
-
-ta inja oke 
-
 ```
  ansible-playbook worker-join-cluster.yml
+```
+ta inja oke 
+```
+ ansible-playbook deploy-kubernetes-dashboard.yml
+```
+```
+ ansible-playbook ansible-deploy-fluentd-deomonset.yml
 ```
 ```
  ansible-playbook ansible-helm-deploy-haproxy.yml
@@ -54,15 +58,7 @@ ta inja oke
 ```
  ansible-playbook ansible-helm-deploy-elasticsearch.yml
 ```
-```
- ansible-playbook Ansible-Deploy-Fluentd-Deomonset.yml
-```
-```
- ansible-playbook ansible-deploy-fluentd-deomonset.yml
-```
-```
- ansible-playbook deploy-kubernetes-dashboard.yml
-```
+
 
 
 ## or all in one seprate for master and worker nodes
