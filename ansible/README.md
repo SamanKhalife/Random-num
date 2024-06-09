@@ -27,6 +27,7 @@
 ```
  ansible-playbook ansible-Install-helm.yml
 ```
+ta inja oke 
 ```
  ansible-playbook ansible-kubectl-krew-plugin.yml
 ```
