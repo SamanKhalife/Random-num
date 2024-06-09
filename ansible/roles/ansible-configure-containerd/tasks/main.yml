@@ -3,7 +3,7 @@
   apt:
     name: containerd.io
     state: present
-    update_cache: yes
+    update_cache: true
 
 - name: Run containerd config command and save output to file
   command: containerd config default
@@ -13,8 +13,8 @@
   copy:
     content: "{{ containerd_config_output.stdout }}"
     dest: /etc/containerd/config.toml
-    force: yes
-    backup: yes
+    force: true
+    backup: true
 
 - name: Modify Containerd configuration
   replace:
