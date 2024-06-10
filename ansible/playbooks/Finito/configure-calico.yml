@@ -1,0 +1,61 @@
+---
+- name: Initialize Kubernetes cluster and deploy Calico CNI
+  hosts: kubernetes_masters
+  become: true
+  strategy: linear
+  tasks:
+
+    - name: Test connection with ping
+      ansible.builtin.ping:
+
+    - name: Initialize Kubernetes cluster
+      ansible.builtin.command: kubeadm init --pod-network-cidr=192.168.0.0/16
+      args:
+        creates: /etc/kubernetes/admin.conf
+      register: kubeadm_output
+    
+    - name: Display kubeadm init output
+      ansible.builtin.debug:
+        var: kubeadm_output.stdout
+
+    - name: Create .kube directory
+      file:
+        path: "{{ ansible_env.HOME }}/.kube"
+        state: directory
+        mode: 0700
+
+    - name: Copy admin.conf to .kube directory
+      copy:
+        src: /etc/kubernetes/admin.conf
+        dest: "{{ ansible_env.HOME }}/.kube/config"
+
+    - name: Set ownership of .kube/config
+      file:
+        path: "{{ ansible_env.HOME }}/.kube/config"
+        owner: "{{ ansible_user_id }}"
+        group: "{{ ansible_user_id }}"
+        mode: 0644
+
+  # - name: Doing some required thing
+  #   shell: "chown $(id -u):$(id -g) $HOME/.kube/config"
+
+    - name: Install Calico CNI
+      command: kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.0/manifests/tigera-operator.yaml
+      ignore_errors: true
+      run_once: true
+
+    - name: Deploy Calico custom resources
+      command: kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.0/manifests/custom-resources.yaml
+      ignore_errors: true
+      run_once: true
+
+    - name: Wait for Kubernetes components to be ready
+      pause:
+        minutes: 7
+
+    # - name: Save join command to file
+    #   command: kubeadm token create --print-join-command > /root/kubeadm_join_command.sh
+    #   when: kubeadm_init.changed
+...
+
+
