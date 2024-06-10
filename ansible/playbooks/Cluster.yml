@@ -148,10 +148,6 @@
   become: true
   strategy: linear
   tasks:
-
-    - name: Test connection with ping
-      ansible.builtin.ping:
-
     - name: Initialize Kubernetes cluster
       ansible.builtin.command: kubeadm init --pod-network-cidr=192.168.0.0/16
       args:
