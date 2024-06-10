@@ -1,0 +1,20 @@
+---
+- name: Generate and fetch kubeadm join command
+  hosts: kubernetes_masters[0]
+  gather_facts: False
+  tasks:
+    - name: Execute kubeadm token create command
+      command: kubeadm token create --print-join-command
+      register: join_command_output
+
+    - name: Write join command to file
+      copy:
+        content: "{{ join_command_output.stdout }}"
+        dest: /root/kubeadm_join_command.sh
+
+    - name: Fetch join command file to local machine
+      fetch:
+        src: /root/kubeadm_join_command.sh
+        dest: /etc/ansible/roles/fetching_new_kubeadm_join_command/files/root/kubeadm_join_command.sh
+        flat: true
+...
