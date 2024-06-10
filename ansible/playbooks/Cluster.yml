@@ -1,0 +1,296 @@
+---
+# ansible-ping-servers.yml
+- name: Example Playbook
+  hosts: all
+  become: true
+  tasks:
+    - name: Check connection
+      ansible.builtin.ping:
+  tags:
+    -
+
+# ansible-change-dns.yml
+
+- name: Set DNS servers in /etc/resolv.conf
+  hosts: all
+  become: true
+  roles:
+    - role: ansible-change-dns
+  tags:
+    -
+
+# ansible-disabling-swap.yml
+
+- name: Disable swap on all hosts
+  hosts: all
+  become: true
+  tasks:
+    - name: Disable swap
+      ansible.builtin.command: swapoff -a
+
+    - name: Remove swap entry from /etc/fstab
+      replace:
+        path: /etc/fstab
+        regexp: '^\s*([^#\s]+\s+){2}swap\s+'
+        replace: '#\g<0>'
+      register: swap_fstab
+
+    - name: Make sure swap is not mounted
+      mount:
+        name: swap
+        state: absent
+        fstype: swap
+
+    - name: Remove swapfile if it exists
+      file:
+        path: /swapfile
+        state: absent
+      when: swap_fstab.changed
+  tags:
+    -
+
+# ansible-Install-docker.yml
+
+- name: Installing-Docker
+  hosts: all
+  become: true
+  roles:
+    - ansible-Install-docker
+  tags:
+    -
+
+# ansible-configuring-containerd.yml
+
+- name: Installing-Helm
+  hosts: all
+  become: true
+  roles:
+    - ansible-configure-containerd
+  tags:
+    -
+
+# installing-k8s-dependencies.yml
+
+- name: Update apt cache and install required packages
+  hosts: all
+  become: true
+  tasks:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+
+    - name: Install required packages
+      ansible.builtin.apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gpg
+          - software-properties-common
+        state: present
+        update_cache: true
+  tags:
+    -
+
+# installing-kubeadm-kubelet-kubectl-master.yml
+
+- name: Install kubeadm, kubelet, kubectl
+  hosts: kubernetes_masters
+  become: true
+  tasks:
+    - name: Ensure /etc/apt/keyrings directory exists
+      file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: '0755'
+
+    - name: Download Kubernetes GPG key
+      ansible.builtin.command: curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key -o /tmp/Release.key
+
+    - name: Convert and save Kubernetes GPG key
+      ansible.builtin.command: gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg /tmp/Release.key
+      args:
+        creates: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+
+    - name: Remove temporary GPG key file
+      file:
+        path: /tmp/Release.key
+        state: absent
+
+    - name: Add Kubernetes apt repository
+      ansible.builtin.command: bash -c "echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list"
+      changed_when: false
+
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+
+    - name: Install Kubernetes packages on master
+      ansible.builtin.apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - kubelet
+        - kubeadm
+        - kubectl
+      tags:
+        - kubernetes
+        - master
+      retries: 3
+      delay: 4
+  tags:
+    -
+
+# configure-calico.yml
+
+- name: Initialize Kubernetes cluster and deploy Calico CNI
+  hosts: kubernetes_masters
+  become: true
+  strategy: linear
+  tasks:
+
+    - name: Test connection with ping
+      ansible.builtin.ping:
+
+    - name: Initialize Kubernetes cluster
+      ansible.builtin.command: kubeadm init --pod-network-cidr=192.168.0.0/16
+      args:
+        creates: /etc/kubernetes/admin.conf
+      register: kubeadm_output
+
+    - name: Display kubeadm init output
+      ansible.builtin.debug:
+        var: kubeadm_output.stdout
+
+    - name: Create .kube directory
+      file:
+        path: "{{ ansible_env.HOME }}/.kube"
+        state: directory
+        mode: 0700
+
+    - name: Copy admin.conf to .kube directory
+      copy:
+        src: /etc/kubernetes/admin.conf
+        dest: "{{ ansible_env.HOME }}/.kube/config"
+
+    - name: Set ownership of .kube/config
+      file:
+        path: "{{ ansible_env.HOME }}/.kube/config"
+        owner: "{{ ansible_user_id }}"
+        group: "{{ ansible_user_id }}"
+        mode: 0644
+
+    - name: Install Calico CNI
+      command: kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.0/manifests/tigera-operator.yaml
+      ignore_errors: true
+      run_once: true
+
+    - name: Deploy Calico custom resources
+      command: kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.0/manifests/custom-resources.yaml
+      ignore_errors: true
+      run_once: true
+
+    - name: Wait for Kubernetes components to be ready
+      pause:
+        minutes: 7
+  tags:
+    -
+# ansible-Install-helm.yml
+
+- name: Installing-Helm
+  hosts: kubernetes_masters[0]
+  become: true
+  roles:
+    - ansible-Install-helm
+  tags:
+    - installing-helm
+
+# fetching-new-kubeadm-join-command.yml
+
+- name: Generate and fetch kubeadm join command
+  hosts: kubernetes_masters[0]
+  gather_facts: False
+  tasks:
+    - name: Execute kubeadm token create command
+      command: kubeadm token create --print-join-command
+      register: join_command_output
+
+    - name: Write join command to file
+      copy:
+        content: "{{ join_command_output.stdout }}"
+        dest: /root/kubeadm_join_command.sh
+
+    - name: Fetch join command file to local machine
+      fetch:
+        src: /root/kubeadm_join_command.sh
+        dest: /etc/ansible/roles/fetching_new_kubeadm_join_command/files/root/kubeadm_join_command.sh
+        flat: true
+  tags:
+    - generate_join_command
+
+ # installing-kubeadm-kubelet-worker.yml
+
+- name: Install Kubernetes and configure containerd on workers nodes
+  hosts: kubernetes_workers
+  become: true
+  tasks:
+    - name: Ensure /etc/apt/keyrings directory exists
+      file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: '0755'
+
+    - name: Download Kubernetes GPG key
+      ansible.builtin.command: curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key -o /tmp/Release.key
+
+    - name: Convert and save Kubernetes GPG key
+      ansible.builtin.command: gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg /tmp/Release.key
+      args:
+        creates: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+
+    - name: Remove temporary GPG key file
+      file:
+        path: /tmp/Release.key
+        state: absent
+
+    - name: Add Kubernetes apt repository
+      ansible.builtin.command: bash -c "echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list"
+      changed_when: false
+
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+
+    - name: Install Kubernetes packages on master
+      ansible.builtin.apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - kubelet
+        - kubeadm
+
+      retries: 3
+      delay: 4
+  tags:
+    -
+
+# worker-join-cluster.yml
+
+- name: Distribute join command file
+  hosts: kubernetes_workers
+  become: true
+  tasks:
+    - name: Copy join command file to worker nodes
+      copy:
+        src: /root/kubeadm_join_command.sh
+        dest: /root/kubeadm_join_command.sh
+        mode: '0755'
+      tags:
+
+    - name: Join worker nodes to the cluster
+      ansible.builtin.command: bash /root/kubeadm_join_command.sh && touch /root/.kubeadm_join_done
+      args:
+        creates: /root/.kubeadm_join_done
+  tags:
+    -
+...
