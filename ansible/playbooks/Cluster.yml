@@ -144,7 +144,7 @@
 # configure-calico.yml
 
 - name: Initialize Kubernetes cluster and deploy Calico CNI
-  hosts: kubernetes_masters
+  hosts: kubernetes_masters[0]
   become: true
   strategy: linear
   tasks:
