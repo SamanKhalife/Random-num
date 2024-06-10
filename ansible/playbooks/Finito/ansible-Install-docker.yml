@@ -1,0 +1,7 @@
+---
+- name: Installing-Docker
+  hosts: all
+  become: true
+  roles:
+    - ansible-Install-docker
+...
