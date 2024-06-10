@@ -1,0 +1,27 @@
+---
+- name: Disable swap on all hosts
+  hosts: all
+  become: true
+  tasks:
+    - name: Disable swap
+      ansible.builtin.command: swapoff -a
+
+    - name: Remove swap entry from /etc/fstab
+      replace:
+        path: /etc/fstab
+        regexp: '^\s*([^#\s]+\s+){2}swap\s+'
+        replace: '# \g<0>'
+      register: swap_fstab
+
+    - name: Make sure swap is not mounted
+      mount:
+        name: swap
+        state: absent
+        fstype: swap
+
+    - name: Remove swapfile if it exists
+      file:
+        path: /swapfile
+        state: absent
+      when: swap_fstab.changed
+...
