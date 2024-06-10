@@ -1,0 +1,16 @@
+---
+- name: Distribute join command file
+  hosts: kubernetes_workers
+  become: true
+  tasks:
+    - name: Copy join command file to worker nodes
+      copy:
+        src: /root/kubeadm_join_command.sh
+        dest: /root/kubeadm_join_command.sh
+        mode: '0755'
+
+    - name: Join worker nodes to the cluster
+      ansible.builtin.command: bash /root/kubeadm_join_command.sh && touch /root/.kubeadm_join_done
+      args:
+        creates: /root/.kubeadm_join_done
+...
