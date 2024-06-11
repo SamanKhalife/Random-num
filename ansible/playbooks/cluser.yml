@@ -206,8 +206,7 @@
   become: true
   roles:
     - ansible-Install-helm
-  tags:
-    - cluster
+    tags: cluster
 
 
 # fetching-new-kubeadm-join-command.yml
