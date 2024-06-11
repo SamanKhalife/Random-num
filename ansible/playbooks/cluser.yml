@@ -6,8 +6,8 @@
   tasks:
     - name: Check connection
       ansible.builtin.ping:
-  tags:
-    - cluster
+      tags:
+        - cluster
 
 # ansible-change-dns.yml
 
@@ -16,8 +16,8 @@
   become: true
   roles:
     - role: ansible-change-dns
-  tags:
-    - cluster
+      tags:
+        - cluster
 
 
 # ansible-disabling-swap.yml
@@ -28,7 +28,7 @@
   tasks:
     - name: Disable swap
       ansible.builtin.command: swapoff -a
-
+      
     - name: Remove swap entry from /etc/fstab
       replace:
         path: /etc/fstab
@@ -64,7 +64,7 @@
 
 # ansible-configuring-containerd.yml
 
-- name: Installing-Helm
+- name: configure-containerd
   hosts: all
   become: true
   roles:
@@ -95,7 +95,7 @@
         update_cache: true
   tags:
     - cluster
-
+    - apt
 
 # installing-kubeadm-kubelet-kubectl-master.yml
 
@@ -206,8 +206,8 @@
   become: true
   roles:
     - ansible-Install-helm
-  tags:
-    - cluster
+    tags:
+      - cluster
 
 
 # fetching-new-kubeadm-join-command.yml
