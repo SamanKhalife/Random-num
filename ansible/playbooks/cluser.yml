@@ -16,8 +16,8 @@
   become: true
   roles:
     - role: ansible-change-dns
-      tags:
-        - cluster
+  tags:
+    - cluster
 
 
 # ansible-disabling-swap.yml
@@ -61,8 +61,8 @@
   become: true
   roles:
     - ansible-Install-docker
-      tags:
-        - cluster
+  tags:
+    - cluster
 
 
 # ansible-configuring-containerd.yml
@@ -72,8 +72,8 @@
   become: true
   roles:
     - ansible-configure-containerd
-      tags:
-        - cluster
+  tags:
+    - cluster
 
 
 # installing-k8s-dependencies.yml
@@ -222,8 +222,8 @@
   become: true
   roles:
     - ansible-Install-helm
-      tags:
-        - cluster
+  tags:
+     - cluster
 
 
 # fetching-new-kubeadm-join-command.yml
