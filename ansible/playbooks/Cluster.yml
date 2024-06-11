@@ -7,7 +7,7 @@
     - name: Check connection
       ansible.builtin.ping:
   tags:
-    -
+    - all
 
 # ansible-change-dns.yml
 
@@ -17,7 +17,7 @@
   roles:
     - role: ansible-change-dns
   tags:
-    -
+    - all
 
 # ansible-disabling-swap.yml
 
@@ -57,7 +57,7 @@
   roles:
     - ansible-Install-docker
   tags:
-    -
+    - all
 
 # ansible-configuring-containerd.yml
 
@@ -67,7 +67,7 @@
   roles:
     - ansible-configure-containerd
   tags:
-    -
+    - all
 
 # installing-k8s-dependencies.yml
 
@@ -90,7 +90,7 @@
         state: present
         update_cache: true
   tags:
-    -
+    - all
 
 # installing-kubeadm-kubelet-kubectl-master.yml
 
@@ -139,7 +139,7 @@
       retries: 3
       delay: 4
   tags:
-    -
+    - all
 
 # configure-calico.yml
 
@@ -190,7 +190,7 @@
       pause:
         minutes: 7
   tags:
-    -
+    - all
 # ansible-Install-helm.yml
 
 - name: Installing-Helm
@@ -199,6 +199,7 @@
   roles:
     - ansible-Install-helm
   tags:
+    - all
     - installing-helm
 
 # fetching-new-kubeadm-join-command.yml
@@ -222,6 +223,7 @@
         dest: /etc/ansible/roles/fetching_new_kubeadm_join_command/files/root/kubeadm_join_command.sh
         flat: true
   tags:
+    - all
     - generate_join_command
 
  # installing-kubeadm-kubelet-worker.yml
@@ -268,7 +270,7 @@
       retries: 3
       delay: 4
   tags:
-    -
+    - all
 
 # worker-join-cluster.yml
 
@@ -288,5 +290,5 @@
       args:
         creates: /root/.kubeadm_join_done
   tags:
-    -
+    - all
 ...
