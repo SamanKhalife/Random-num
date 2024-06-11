@@ -6,8 +6,7 @@
   tasks:
     - name: Check connection
       ansible.builtin.ping:
-  tags:
-    - all
+
 
 # ansible-change-dns.yml
 
@@ -16,8 +15,7 @@
   become: true
   roles:
     - role: ansible-change-dns
-  tags:
-    - all
+
 
 # ansible-disabling-swap.yml
 
@@ -46,8 +44,7 @@
         path: /swapfile
         state: absent
       when: swap_fstab.changed
-  tags:
-    - all
+
 
 # ansible-Install-docker.yml
 
@@ -56,8 +53,7 @@
   become: true
   roles:
     - ansible-Install-docker
-  tags:
-    - all
+
 
 # ansible-configuring-containerd.yml
 
@@ -66,8 +62,7 @@
   become: true
   roles:
     - ansible-configure-containerd
-  tags:
-    - all
+
 
 # installing-k8s-dependencies.yml
 
@@ -89,8 +84,7 @@
           - software-properties-common
         state: present
         update_cache: true
-  tags:
-    - all
+
 
 # installing-kubeadm-kubelet-kubectl-master.yml
 
@@ -138,8 +132,7 @@
         - master
       retries: 3
       delay: 4
-  tags:
-    - all
+
 
 # configure-calico.yml
 
@@ -189,8 +182,8 @@
     - name: Wait for Kubernetes components to be ready
       pause:
         minutes: 7
-  tags:
-    - all
+
+
 # ansible-Install-helm.yml
 
 - name: Installing-Helm
@@ -198,9 +191,7 @@
   become: true
   roles:
     - ansible-Install-helm
-  tags:
-    - all
-    - installing-helm
+
 
 # fetching-new-kubeadm-join-command.yml
 
@@ -222,9 +213,7 @@
         src: /root/kubeadm_join_command.sh
         dest: /etc/ansible/roles/fetching_new_kubeadm_join_command/files/root/kubeadm_join_command.sh
         flat: true
-  tags:
-    - all
-    - generate_join_command
+
 
  # installing-kubeadm-kubelet-worker.yml
 
@@ -269,8 +258,6 @@
 
       retries: 3
       delay: 4
-  tags:
-    - all
 
 # worker-join-cluster.yml
 
@@ -289,6 +276,5 @@
       ansible.builtin.command: bash /root/kubeadm_join_command.sh && touch /root/.kubeadm_join_done
       args:
         creates: /root/.kubeadm_join_done
-  tags:
-    - all
+
 ...
