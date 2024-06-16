@@ -42,6 +42,17 @@ If needed, destroy all resources managed by this configuration
 terraform destroy
 ```
 
+
+# use ansible to setup k8s Cluster
+
+```
+cd etc/ansible/playbooks
+```
+```
+ansible-playbook cluser.yml
+```
+
+
 ## what ansible will do for us ???  
 
 ansible tasks and tags:
