@@ -15,5 +15,3 @@ worker[1:2]
 kubernetes_masters
 kubernetes_workers
 
-[nfs_server]
-nfs

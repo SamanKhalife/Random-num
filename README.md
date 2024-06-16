@@ -1,6 +1,11 @@
 # Random-num-test-project
 test project to start working with Kubernetes, Rabbitmq, Mariadb, Fluentd and Elasticsearch.
 
+Clone the repo to your machine:
+```
+git clone https://github.com/SamanKhalife/Random-num.git
+```
+
 ## project used commponnets and tools
 ```
 python
@@ -41,6 +46,17 @@ If needed, destroy all resources managed by this configuration
 ```
 terraform destroy
 ```
+
+
+# use ansible to setup k8s Cluster
+moving file from directory to etc
+```
+mv ansible/* ansible/.ansible-lint /etc/ansible/ && cd /etc/ansible/playbooks
+```
+```
+ansible-playbook cluser.yml
+```
+
 
 ## what ansible will do for us ???  
 
