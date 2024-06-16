@@ -1,7 +1,7 @@
  # testing play book one by one
 
 ```
- ansible-playbook Cluster.yml
+ ansible-playbook cluster.yml
 ```
 tested done
 

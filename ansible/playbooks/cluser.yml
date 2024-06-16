@@ -6,8 +6,9 @@
   tasks:
     - name: Check connection
       ansible.builtin.ping:
-  tags:
-    -
+      tags:
+        - cluster
+        - ping
 
 # ansible-change-dns.yml
 
@@ -17,7 +18,8 @@
   roles:
     - role: ansible-change-dns
   tags:
-    -
+    - cluster
+    - dns
 
 # ansible-disabling-swap.yml
 
@@ -27,27 +29,34 @@
   tasks:
     - name: Disable swap
       ansible.builtin.command: swapoff -a
-
+      tags:
+        - cluster
+        - swap
     - name: Remove swap entry from /etc/fstab
       replace:
         path: /etc/fstab
         regexp: '^\s*([^#\s]+\s+){2}swap\s+'
         replace: '#\g<0>'
       register: swap_fstab
-
+      tags:
+        - cluster
+        - swap
     - name: Make sure swap is not mounted
       mount:
         name: swap
         state: absent
         fstype: swap
-
+      tags:
+        - cluster
+        - swap
     - name: Remove swapfile if it exists
       file:
         path: /swapfile
         state: absent
       when: swap_fstab.changed
-  tags:
-    -
+      tags:
+        - cluster
+        - swap
 
 # ansible-Install-docker.yml
 
@@ -57,17 +66,19 @@
   roles:
     - ansible-Install-docker
   tags:
-    -
+    - cluster
+    - docker
 
 # ansible-configuring-containerd.yml
 
-- name: Installing-Helm
+- name: configure-containerd
   hosts: all
   become: true
   roles:
     - ansible-configure-containerd
   tags:
-    -
+    - cluster
+    - containerd
 
 # installing-k8s-dependencies.yml
 
@@ -78,7 +89,8 @@
     - name: Update apt cache
       ansible.builtin.apt:
         update_cache: true
-
+      tags:
+        - cluster
     - name: Install required packages
       ansible.builtin.apt:
         name:
@@ -89,9 +101,10 @@
           - software-properties-common
         state: present
         update_cache: true
-  tags:
-    -
-
+      tags:
+        - cluster
+        - apt
+        - depences
 # installing-kubeadm-kubelet-kubectl-master.yml
 
 - name: Install kubeadm, kubelet, kubectl
@@ -103,28 +116,42 @@
         path: /etc/apt/keyrings
         state: directory
         mode: '0755'
-
+      tags:
+        - cluster
+        - master
+        - kubeadm-kubelet-kubectl
+        
     - name: Download Kubernetes GPG key
       ansible.builtin.command: curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key -o /tmp/Release.key
-
+      tags:
+        - cluster
+        - master
     - name: Convert and save Kubernetes GPG key
       ansible.builtin.command: gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg /tmp/Release.key
       args:
         creates: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-
+      tags:
+        - cluster
+        - master
     - name: Remove temporary GPG key file
       file:
         path: /tmp/Release.key
         state: absent
-
+      tags:
+        - cluster
+        - master
     - name: Add Kubernetes apt repository
       ansible.builtin.command: bash -c "echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list"
       changed_when: false
-
+      tags:
+        - cluster
+        - master
     - name: Update apt cache
       ansible.builtin.apt:
         update_cache: true
-
+      tags:
+        - cluster
+        - master
     - name: Install Kubernetes packages on master
       ansible.builtin.apt:
         name: "{{ item }}"
@@ -136,10 +163,11 @@
       tags:
         - kubernetes
         - master
+        - cluster
       retries: 3
       delay: 4
-  tags:
-    -
+
+
 
 # configure-calico.yml
 
@@ -153,44 +181,60 @@
       args:
         creates: /etc/kubernetes/admin.conf
       register: kubeadm_output
-
+      tags:
+        - cluster
+        - master
     - name: Display kubeadm init output
       ansible.builtin.debug:
         var: kubeadm_output.stdout
-
+      tags:
+        - cluster
+        - master
     - name: Create .kube directory
       file:
         path: "{{ ansible_env.HOME }}/.kube"
         state: directory
         mode: 0700
-
+      tags:
+        - cluster
+        - master
     - name: Copy admin.conf to .kube directory
       copy:
         src: /etc/kubernetes/admin.conf
         dest: "{{ ansible_env.HOME }}/.kube/config"
-
+      tags:
+        - cluster
+        - master
     - name: Set ownership of .kube/config
       file:
         path: "{{ ansible_env.HOME }}/.kube/config"
         owner: "{{ ansible_user_id }}"
         group: "{{ ansible_user_id }}"
         mode: 0644
-
+      tags:
+        - cluster
+        - master
     - name: Install Calico CNI
       ansible.builtin.command: kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.0/manifests/tigera-operator.yaml
       ignore_errors: true
       run_once: true
-
+      tags:
+        - cluster
     - name: Deploy Calico custom resources
       ansible.builtin.command: kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.0/manifests/custom-resources.yaml
       ignore_errors: true
       run_once: true
-
+      tags:
+        - cluster
+        - master
     - name: Wait for Kubernetes components to be ready
       pause:
         minutes: 7
-  tags:
-    -
+      tags:
+        - cluster
+        - master
+
+
 # ansible-Install-helm.yml
 
 - name: Installing-Helm
@@ -199,7 +243,9 @@
   roles:
     - ansible-Install-helm
   tags:
-    - installing-helm
+     - cluster
+     - master
+     - helm
 
 # fetching-new-kubeadm-join-command.yml
 
@@ -210,20 +256,25 @@
     - name: Execute kubeadm token create command
       ansible.builtin.command: kubeadm token create --print-join-command
       register: join_command_output
-
+      tags:
+        - cluster
+        - join
     - name: Write join command to file
       copy:
         content: "{{ join_command_output.stdout }}"
         dest: /root/kubeadm_join_command.sh
-
+      tags:
+        - cluster
+        - join
     - name: Fetch join command file to local machine
       fetch:
         src: /root/kubeadm_join_command.sh
         dest: /etc/ansible/roles/fetching_new_kubeadm_join_command/files/root/kubeadm_join_command.sh
         flat: true
-  tags:
-    - generate_join_command
-
+      tags:
+        - cluster
+        - join
+  
  # installing-kubeadm-kubelet-worker.yml
 
 - name: Install Kubernetes and configure containerd on workers nodes
@@ -235,28 +286,34 @@
         path: /etc/apt/keyrings
         state: directory
         mode: '0755'
-
+      tags:
+        - cluster
     - name: Download Kubernetes GPG key
       ansible.builtin.command: curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key -o /tmp/Release.key
-
+      tags:
+        - cluster
     - name: Convert and save Kubernetes GPG key
       ansible.builtin.command: gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg /tmp/Release.key
       args:
         creates: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-
+      tags:
+        - cluster
     - name: Remove temporary GPG key file
       file:
         path: /tmp/Release.key
         state: absent
-
+      tags:
+        - cluster
     - name: Add Kubernetes apt repository
       ansible.builtin.command: bash -c "echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list"
       changed_when: false
-
+      tags:
+        - cluster
     - name: Update apt cache
       ansible.builtin.apt:
         update_cache: true
-
+      tags:
+        - cluster
     - name: Install Kubernetes packages on master
       ansible.builtin.apt:
         name: "{{ item }}"
@@ -264,11 +321,12 @@
       loop:
         - kubelet
         - kubeadm
-
+      tags:
+        - cluster
       retries: 3
       delay: 4
-  tags:
-    -
+
+
 
 # worker-join-cluster.yml
 
@@ -282,11 +340,11 @@
         dest: /root/kubeadm_join_command.sh
         mode: '0755'
       tags:
-
+        - cluster
     - name: Join worker nodes to the cluster
       ansible.builtin.command: bash /root/kubeadm_join_command.sh && touch /root/.kubeadm_join_done
       args:
         creates: /root/.kubeadm_join_done
-  tags:
-    -
+      tags:
+        - cluster
 ...
