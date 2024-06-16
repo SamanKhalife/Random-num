@@ -44,9 +44,9 @@ terraform destroy
 
 
 # use ansible to setup k8s Cluster
-
+moving file from directory to etc
 ```
-cd etc/ansible/playbooks
+mv ansible etc/ansible/ && cd etc/ansible/playbooks
 ```
 ```
 ansible-playbook cluser.yml
