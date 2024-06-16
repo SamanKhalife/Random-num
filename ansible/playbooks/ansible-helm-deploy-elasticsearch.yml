@@ -1,7 +1,0 @@
----
-- name: Deploy-elasticsearch
-  hosts: kubernetes_masters[0]
-  become: true
-  roles:
-    - role: ansible-helm-deploy-elasticsearch
-...
