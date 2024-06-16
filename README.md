@@ -1,6 +1,11 @@
 # Random-num-test-project
 test project to start working with Kubernetes, Rabbitmq, Mariadb, Fluentd and Elasticsearch.
 
+Clone the repo to your machine:
+```
+git clone https://github.com/SamanKhalife/Random-num.git
+```
+
 ## project used commponnets and tools
 ```
 python
