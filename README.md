@@ -58,7 +58,7 @@ ansible-playbook cluser.yml
 ```
 
 
-## what ansible will do for us ???  
+## Tag selection for ansible
 
 ansible tasks and tags:
 
