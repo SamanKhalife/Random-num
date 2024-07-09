@@ -1,12 +1,18 @@
-# Random-num-test-project
-test project to start working with Kubernetes, Rabbitmq, Mariadb, Fluentd and Elasticsearch.
+### this project is not fully complete be patient please 
+# Random num
 
-Clone the repo to your machine:
-```
-git clone https://github.com/SamanKhalife/Random-num.git
-```
+Random num generator is an app with helps you to understand how A Modern App Deployment to the infrastructure from base on the linux servers 
 
-## project used commponnets and tools
+# So How It Working:
+
+* 1- Creating 3 Ubuntu servers Using Terraform
+* 2- build an Kubernetes Cluster Using Ansible
+* 3- building A Docker Image of App and Push it to docker hub
+* 4- Try to deploy The app to kubernetes Cluster
+* 5- Setting up Monitoring Tool's
+* 6- set up firewalls to protect Service's 
+
+##  languages, commponnets, and tools Used in a project
 ```
 python
 docker
@@ -24,7 +30,7 @@ fluentd
 mariadb
 ```
 
-## applying terraform
+## Create Servers Using Terraform
 
 ```
 cd /random-num/terraform
@@ -49,6 +55,10 @@ terraform destroy
 
 
 # use ansible to setup k8s Cluster
+ssh-config file
+```
+~/.ssh/config
+```
 moving file from directory to etc
 ```
 mv ansible/* ansible/.ansible-lint /etc/ansible/ && cd /etc/ansible/playbooks
@@ -56,14 +66,17 @@ mv ansible/* ansible/.ansible-lint /etc/ansible/ && cd /etc/ansible/playbooks
 ```
 ansible-playbook cluser.yml
 ```
-
+deployment by ansible using tags
+```
+ansible-playbook -i hosts playbook.yml --tags "tag,tag,..." 
+```
 
 ## Tag selection for ansible
 
 ansible tasks and tags:
 
 
-| Role Name               | Tags                   | Role-Location    |  whichh Node deployed | 
+| Role Name               | Tags                   | Role-Location    |  which Node deployed | 
 | ------------------------| -----------------------| ---------------- | ---------------- | 
 | updating system         | full,update            | update_system    | master,worker1,work2 |
 | unabling swap           | full,disable_swap      | update_system    | master,worker1,work2 | 
@@ -82,13 +95,10 @@ ansible tasks and tags:
 
 
 
-deployment by ansible using tags
-```
-ansible-playbook -i hosts playbook.yml --tags "tag,tag,..." 
-```
 
 
-## host port usege map
+
+## map port usege
 
 |kubernetes(master)|kubernetes(worker)|rabbitmq|node-exporter|prometheus|mariadb|elastic| kinbana| grafana | fluentd |
 | ---------------- | ---------------- | ------ | ----------- | -------- | ----- | ----- | ------ | ------- | ------- | 
@@ -100,10 +110,7 @@ ansible-playbook -i hosts playbook.yml --tags "tag,tag,..."
 
 
 
-ssh-config file
-```
-~/.ssh/config
-```
+
 
 
 
